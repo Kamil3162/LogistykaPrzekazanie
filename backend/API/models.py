@@ -199,10 +199,10 @@ class VehicleReceivment(models.Model):
                                      on_delete=models.CASCADE,
                                      blank=False)
     data_created = models.DateField(auto_created=True)
-    data_ended = models.DateField(blank=True)
+    data_ended = models.DateField(blank=True, null=True)
     user = models.ForeignKey(AppUser,
                              on_delete=models.CASCADE,
                              blank=False)
 
     def __str__(self):
-        return self.id
+        return str(self.id)

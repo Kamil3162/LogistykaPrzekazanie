@@ -1,5 +1,5 @@
 import datetime
-
+from django.db import IntegrityError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from .models import (
@@ -117,8 +117,15 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        vehicle = VehicleReceivment.objects.create(**validated_data)
-        return vehicle
+        user = validated_data.get('user')
+        receivments = VehicleReceivment.objects.filter(user=user)
+        receivments_status_end = receivments.values_list('data_ended', flat=True)
+        print(receivments_status_end)
+        user_receivements_exist = any(receivments is None for receivments in receivments_status_end)
+        if user_receivements_exist:
+            vehicle = VehicleReceivment.objects.create(**validated_data)
+            return vehicle
+        raise IntegrityError("Record exist in db")
 
     def update(self, instance, validated_data):
         instance.date_ended = validated_data.get('date_ended', instance.date_ended)

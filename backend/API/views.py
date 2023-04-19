@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.db import IntegrityError
 from . import serializers
 from rest_framework import permissions, status
 from .models import (
@@ -210,11 +211,9 @@ class VehicleReceivments(APIView):
 	def post(self, request):
 		information = request.data
 		truck_num = get_object_or_404(Truck, pk=information.get('truck'))
-
 		semi_trailer = get_object_or_404(SemiTrailer, pk=information.get('semi_trailer'))
 		user = request.user
 		date_today = str(datetime.datetime.today()).split(" ")[0]
-
 		information['data_created'] = date_today
 		information['user'] = request.user.pk
 		serializer = serializers.VehicleReceivmentSerializer(data=information)
@@ -222,7 +221,10 @@ class VehicleReceivments(APIView):
 			information['truck'] = truck_num
 			information['semi_trailer'] = semi_trailer
 			information['user'] = request.user
-			receivment = serializer.create(information)
-			receivment.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+			try:
+				receivment = serializer.create(information)
+				receivment.save()
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			except IntegrityError as e:
+				return Response({"error":"Record exist in db"}, status=status.HTTP_409_CONFLICT)
 		return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
