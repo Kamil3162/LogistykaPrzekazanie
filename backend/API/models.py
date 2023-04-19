@@ -199,7 +199,7 @@ class VehicleReceivment(models.Model):
                                      on_delete=models.CASCADE,
                                      blank=False)
     data_created = models.DateField(auto_created=True)
-    data_ended = models.DateField()
+    data_ended = models.DateField(blank=True)
     user = models.ForeignKey(AppUser,
                              on_delete=models.CASCADE,
                              blank=False)

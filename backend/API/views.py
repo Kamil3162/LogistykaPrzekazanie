@@ -1,16 +1,19 @@
 from django.contrib.auth import get_user_model, login, logout
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from . import serializers
 from rest_framework import permissions, status
 from .models import (
 					SemiTrailer,
 					Truck,
 					TruckEquipment,
-					SemiTrailerEquipment)
+					SemiTrailerEquipment,
+					VehicleReceivment)
 from rest_framework.decorators import api_view
-
+import datetime
 '''
 	Login part - 
 '''
@@ -130,7 +133,26 @@ class SamiTrucksView(APIView):
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
 class SamiTrucksAdd(APIView):
-	pass
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
+
+	def post(self, request):
+		"""
+			First we need to parse data to serializer
+			Next check those this object exists in our db
+			If exist return status 40.
+			If not return status 201 or 200
+		"""
+		try:
+			information = request.data
+			serializer = serializers.SemiTrailerSerializer(data=information)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			else:
+				return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class TruckEquimpmentView(APIView):
@@ -160,4 +182,47 @@ class SamiTruckEquipment(APIView):
 		except TypeError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
+class VehicleReceivments(APIView):
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
 
+	def get(self, request):
+		queryset = VehicleReceivment.objects.all()
+		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	'''
+	def post(self, request):
+		cleaned_data = request.data
+		try:
+			vehicle = serializers.VehicleReceivmentSerializer(data=cleaned_data)
+			if vehicle.check_existance(cleaned_data):
+				return Response({"error": "Its exists"}, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			serializer = serializers.VehicleReceivmentSerializer(data=cleaned_data)
+			if serializer.is_valid():
+				vehicle = serializer.create(cleaned_data)
+				vehicle.save()
+				return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+			else:
+				return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+	'''
+
+	def post(self, request):
+		information = request.data
+		truck_num = get_object_or_404(Truck, pk=information.get('truck'))
+
+		semi_trailer = get_object_or_404(SemiTrailer, pk=information.get('semi_trailer'))
+		user = request.user
+		date_today = str(datetime.datetime.today()).split(" ")[0]
+
+		information['data_created'] = date_today
+		information['user'] = request.user.pk
+		serializer = serializers.VehicleReceivmentSerializer(data=information)
+		if serializer.is_valid():
+			information['truck'] = truck_num
+			information['semi_trailer'] = semi_trailer
+			information['user'] = request.user
+			receivment = serializer.create(information)
+			receivment.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -27,9 +27,11 @@ function User(){
   }, [])
 
   return (
-        <div>
-        <h1>Response Data</h1>
-        <pre>{JSON.stringify(currentUser, null, 2)}</pre>
+      <div>
+          <h1>Response Data</h1>
+          {Object.entries(currentUser.user).map(([key, value]) => (
+              <p>{key}: {value}</p>
+          ))}
       </div>
     )
 }

@@ -1,10 +1,13 @@
+import datetime
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from .models import (
     Truck,
     TruckEquipment,
     SemiTrailer,
-    SemiTrailerEquipment
+    SemiTrailerEquipment,
+    VehicleReceivment
 )
 CustomUser = get_user_model()
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -86,5 +89,45 @@ class TruckEqupmentSerializer(serializers.ModelSerializer):
 class SemiTrailerSerializer(serializers.ModelSerializer):
     class Meta:
         model = SemiTrailer
-        fields = ('brand', 'model')
+        fields = '__all__'
 
+    def check_existance(self, validated_data):
+        samitrailer = SemiTrailer.objects.filter(**validated_data)
+        if not samitrailer:
+            return False
+        return True
+
+    def create(self, validated_data):
+        return SemiTrailer.objects.create(**validated_data)
+    def update(self, instance, validated_data):
+        instance.brand = validated_data.get('brand', instance.brand)
+        instance.model = validated_data.get('model', instance.model)
+        instance.production_year = validated_data.get('production_year',
+                                                      instance.production_year)
+        instance.registration_number = validated_data.get('registration_number',
+                                                          intance.registration_number)
+        instance.semi_note = validated_data.get('semi_note', instance.semi_note)
+        instance.save()
+        return instance
+
+
+class VehicleReceivmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VehicleReceivment
+        fields = '__all__'
+
+    def create(self, validated_data):
+        vehicle = VehicleReceivment.objects.create(**validated_data)
+        return vehicle
+
+    def update(self, instance, validated_data):
+        instance.date_ended = validated_data.get('date_ended', instance.date_ended)
+        instance.save()
+        return instance
+
+    def check_existance(self, validated_data):
+        truck = VehicleReceivment.objects.filter(**validated_data)
+        print(not truck)
+        if not truck:
+            return False
+        return True
