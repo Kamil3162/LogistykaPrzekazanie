@@ -12,8 +12,10 @@ urlpatterns = [
     path('truck-del/<int:pk>', views.TruckDelete.as_view()),
     path('samitrucks', views.SamiTrucksView.as_view()),
     path('samitruck/add', views.SamiTrucksAdd.as_view()),
-    #path('samitruck/<str:plate>', views.DetailSamiTrucksView.as_view()),
+    path('samitruck/<int:pk>', views.SamiTrucksDetailView.as_view()),
     path('samitrucks-equip', views.SamiTrucksView.as_view()),
     path('trucks-equip', views.TruckEquimpmentView.as_view()),
-    path('vehicle-receivements', views.VehicleReceivments.as_view())
+    path('vehicle-receivements', views.VehicleReceivments.as_view()),
+    # photo add tuck
+    # photo add semitruck
 ]

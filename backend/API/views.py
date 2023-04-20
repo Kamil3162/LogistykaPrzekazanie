@@ -154,7 +154,17 @@ class SamiTrucksAdd(APIView):
 				return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
 			return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class SamiTrucksDetailView(APIView):
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
 
+	def get(self, request, pk):
+		try:
+			queryset = SemiTrailer.objects.get(pk=pk)
+			serializer = serializers.SemiTrailerSerializer(queryset)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except queryset.DoesNotExist:
+			return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 class TruckEquimpmentView(APIView):
 	permission_classes = (permissions.IsAuthenticated,)

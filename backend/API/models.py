@@ -191,9 +191,23 @@ class SemiTrailerEquipment(models.Model):
 
 
 class VehicleReceivment(models.Model):
+    """
+        This model is responsible for createing a receivment in Company
+        Complain field is very crucial if we will choose N this means
+        that :
+            - we havent any problems and everything is fine
+        If we press yes we will have fiels to fill with photos
+        Photos to truck , photos to semi_trailer or both
+    """
+    COMPLAIN = (
+        ('T', 'Tak'),
+        ('N', 'Nie'),
+        ('A', 'Awaria'),
+    )
+
     truck = models.ForeignKey(Truck,
                               on_delete=models.CASCADE,
-                              blank=Truck)
+                              blank=True)
 
     semi_trailer = models.ForeignKey(SemiTrailer,
                                      on_delete=models.CASCADE,
@@ -203,6 +217,17 @@ class VehicleReceivment(models.Model):
     user = models.ForeignKey(AppUser,
                              on_delete=models.CASCADE,
                              blank=False)
-
+    complain = models.CharField(max_length=1, choices=COMPLAIN, default='N')
     def __str__(self):
         return str(self.id)
+class TruckComplainPhoto(models.Model):
+    receivment = models.ForeignKey(VehicleReceivment,
+                                   on_delete=models.CASCADE,
+                                   blank=False)
+    truck_photo = models.FileField(upload_to='media', blank=False)
+
+class SemiTrailerComplainPhoto(models.Model):
+    receivment = models.ForeignKey(VehicleReceivment,
+                                   on_delete=models.CASCADE,
+                                   blank=False)
+    semitrailer_photo = models.FileField(upload_to='media', blank=False)
