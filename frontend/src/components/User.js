@@ -9,14 +9,14 @@ client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
 function User(){
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
   const fetchUser = () =>{
     client.get('/api/user', {
     })
     .then(response => {
       console.log("to jest data z usera")
       console.log(response.data.user);
-      setCurrentUser(response.data);
+      setCurrentUser(response.data.user);
     })
     .catch(error => {
       console.error(error);
@@ -29,9 +29,12 @@ function User(){
   return (
       <div>
           <h1>Response Data</h1>
-          {Object.entries(currentUser.user).map(([key, value]) => (
-              <p>{key}: {value}</p>
-          ))}
+          <p>{currentUser.name}</p>
+          <p>{currentUser.surname}</p>
+          <p>{currentUser.city}</p>
+          <p>{currentUser.username}</p>
+          <p>{currentUser.email}</p>
+          <p>{currentUser.region}</p>
       </div>
     )
 }

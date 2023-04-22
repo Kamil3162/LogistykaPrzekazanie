@@ -119,6 +119,12 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = validated_data.get('user')
         receivments = VehicleReceivment.objects.filter(user=user)
+        truck = validated_data.get('truck')
+        truck.set_availability('Zaj')
+        truck.save()
+        semi_truck = validated_data.get('semi_trailer')
+        semi_truck.set_availability('Zaj')
+        semi_truck.save()
         receivments_status_end = receivments.values_list('data_ended', flat=True)
         print(receivments_status_end)
         user_receivements_exist = any(receivments is None for receivments in receivments_status_end)
@@ -129,6 +135,11 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.date_ended = validated_data.get('date_ended', instance.date_ended)
+        instance.save()
+        return instance
+
+    def update_complain_state(self, instance, validated_data):
+        instance.complain = validated_data.get('complain', instance.complain)
         instance.save()
         return instance
 

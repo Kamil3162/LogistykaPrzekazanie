@@ -6,6 +6,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import User from "./components/User";
+import VehicleReceivments from "./components/VehicleReceivments";
 /*
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -26,10 +27,15 @@ function App() {
           <a href="/user">
               User dane
           </a>
+
+          <a href="/vehicle-receivments">
+              Vehicle Receivments
+          </a>
           <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/user" element={<User/>}/>
+            <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
           </Routes>
       </div>
   );

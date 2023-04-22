@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import (RegexValidator,
                                     MinValueValidator,
                                     MaxValueValidator)
+
+
 def email_validator(email_add):
     if re.match(r'([A-Za-z0-9]{25}[.-_]*[A-Za-z0-9]{10}@([A-Za-z]{10})+(\.[A-Za-z]{2,}))', email_add):
         return ValidationError("Email is not propertly")
@@ -95,11 +97,6 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 		return self.email
 
 
-from django.core.validators import (RegexValidator,
-                                    MinValueValidator,
-                                    MaxValueValidator,
-                                    ValidationError)
-
 
 def registration_num_validator(reg_num):
     if re.match(r'([A-Z]{2,3})([0-9]{4,5})', reg_num):
@@ -125,6 +122,13 @@ class Truck(models.Model):
 
     def __str__(self):
         return self.registration_number
+
+    def set_availability(self, state):
+        try:
+            choice = self.CHOICES.__getitem__(state)
+            self.avaiable = choice
+        except Exception as e:
+            print(e.__traceback__)
 
 class TruckEquipment(models.Model):
     CHOICES = (
@@ -154,6 +158,11 @@ class TruckEquipment(models.Model):
 
 
 class SemiTrailer(models.Model):
+    CHOICES = (
+        ('Wol', 'Wolny'),
+        ('Zaj', 'Zajety'),
+        ('Awar', 'Awaria')
+    )
     brand = models.CharField(max_length=20, blank=False)
     model = models.CharField(max_length=40, blank=False)
     production_year = models.DateField()
@@ -162,9 +171,17 @@ class SemiTrailer(models.Model):
                                            validators=[registration_num_validator], unique=True)
 
     semi_note = models.BooleanField(default=True, blank=False)
-
+    avaiable = models.CharField(max_length=4, choices=CHOICES, default='Wol', blank=False)
     def __str__(self):
         return self.registration_number
+
+    def set_availability(self, state):
+        try:
+            choice = self.CHOICES.__getitem__(state)
+            self.avaiable = choice
+        except Exception as e:
+            print(e.__traceback__)
+
 
 class SemiTrailerEquipment(models.Model):
     semi_trailer = models.ForeignKey(SemiTrailer,
@@ -198,6 +215,9 @@ class VehicleReceivment(models.Model):
             - we havent any problems and everything is fine
         If we press yes we will have fiels to fill with photos
         Photos to truck , photos to semi_trailer or both
+
+        Director have to accept this receivment before gave a truck
+
     """
     COMPLAIN = (
         ('T', 'Tak'),
@@ -217,9 +237,12 @@ class VehicleReceivment(models.Model):
     user = models.ForeignKey(AppUser,
                              on_delete=models.CASCADE,
                              blank=False)
+
     complain = models.CharField(max_length=1, choices=COMPLAIN, default='N')
+
     def __str__(self):
         return str(self.id)
+
 class TruckComplainPhoto(models.Model):
     receivment = models.ForeignKey(VehicleReceivment,
                                    on_delete=models.CASCADE,

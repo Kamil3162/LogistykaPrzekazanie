@@ -238,3 +238,37 @@ class VehicleReceivments(APIView):
 			except IntegrityError as e:
 				return Response({"error":"Record exist in db"}, status=status.HTTP_409_CONFLICT)
 		return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class VehicleReceivmentDetail(APIView):
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
+
+	def get(self, request, pk):
+		try:
+			queryset = VehicleReceivment.objects.get(pk=pk)
+			serializer = serializers.VehicleReceivmentSerializer(queryset)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+	def post(self, request, pk):
+		try:
+			queryset = VehicleReceivment.objects.get(pk=pk)
+			serializer = serializers.VehicleReceivmentSerializer(queryset)
+			serializer.update_complain_state(queryset, request.data)
+			return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+		except Exception as e:
+			return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+"""
+	tworzymy odbior dla naszego kierowcy -
+	Mamy można tak powiedziecx chyba dwie opcje
+	1. Zdajemy samochod do firmy
+	2. Oddajemy samochód do firmy
+	3. Zakonczenie z poziomu kierowcy - zapytanie do VehiReceivemnts
+	ze daata ended  = datatime.datatime.now()
+	4. Znana stanu samochodu po przekzaiu czyli
+	Truck zmienia swój stan na zajęty lub wolny lub awaria
+	5. Dodawanie zdjec przy odbiorze czy coś się zgadza
+	6. DOdawanie zdjec w trasie jak coś sie zniszczy
+"""
+
