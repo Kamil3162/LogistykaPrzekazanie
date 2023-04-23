@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import User from "./components/User";
 import VehicleReceivments from "./components/VehicleReceivments";
+import TruckPhotoReceivment from "./components/TruckPhotoReceivment";
 /*
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -28,6 +29,10 @@ function App() {
               User dane
           </a>
 
+          <a href="/report/receivment">
+              Report
+          </a>
+
           <a href="/vehicle-receivments">
               Vehicle Receivments
           </a>
@@ -36,6 +41,7 @@ function App() {
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/user" element={<User/>}/>
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
+            <Route path="/report/receivment" element={<TruckPhotoReceivment/>}/>
           </Routes>
       </div>
   );

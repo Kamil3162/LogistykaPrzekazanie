@@ -17,6 +17,7 @@ urlpatterns = [
     path('trucks-equip', views.TruckEquimpmentView.as_view()),
     path('vehicle-receivements', views.VehicleReceivments.as_view()),
     path('vehicle-receivements/<int:pk>', views.VehicleReceivmentDetail.as_view()),
+    path('vehicle-receivements/complain/add',views.ReceivmentTruckComplain.as_view())
     # photo add tuck
     # photo add semitruck
 ]

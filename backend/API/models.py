@@ -52,6 +52,7 @@ class AppUserManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
+
 	def create_superuser(self, name, surname, city, region, zip_code,
 						 email_address, mobile_phone, password=None, **extra_fields):
 		user = self.create_user(
@@ -70,7 +71,6 @@ class AppUserManager(BaseUserManager):
 		user.is_superuser = True
 		user.save(using=self._db)
 		return user
-
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
 	name = models.CharField(max_length=40, blank=False)
@@ -247,10 +247,10 @@ class TruckComplainPhoto(models.Model):
     receivment = models.ForeignKey(VehicleReceivment,
                                    on_delete=models.CASCADE,
                                    blank=False)
-    truck_photo = models.FileField(upload_to='media', blank=False)
+    truck_photo = models.ImageField(upload_to='media', blank=False)
 
 class SemiTrailerComplainPhoto(models.Model):
     receivment = models.ForeignKey(VehicleReceivment,
                                    on_delete=models.CASCADE,
                                    blank=False)
-    semitrailer_photo = models.FileField(upload_to='media', blank=False)
+    semitrailer_photo = models.ImageField(upload_to='media', blank=False)

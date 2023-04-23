@@ -3,6 +3,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from . import serializers
@@ -258,6 +259,28 @@ class VehicleReceivmentDetail(APIView):
 			return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 		except Exception as e:
 			return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ReceivmentTruckComplain(APIView):
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
+	parser_classes = [MultiPartParser, FormParser]
+
+	def get(self, request):
+		queryset = VehicleReceivment.objects.all()
+		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+	def post(self, request):
+		print(request.FILES)
+		information = request.data
+		serializer = serializers.TruckPhotoComplain(data=information)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		else:
+			return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+
+
+
 
 """
 	tworzymy odbior dla naszego kierowcy -

@@ -7,7 +7,9 @@ from .models import (
     TruckEquipment,
     SemiTrailer,
     SemiTrailerEquipment,
-    VehicleReceivment
+    VehicleReceivment,
+    TruckComplainPhoto,
+    SemiTrailerComplainPhoto
 )
 CustomUser = get_user_model()
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -128,7 +130,8 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         receivments_status_end = receivments.values_list('data_ended', flat=True)
         print(receivments_status_end)
         user_receivements_exist = any(receivments is None for receivments in receivments_status_end)
-        if user_receivements_exist:
+        print(user_receivements_exist)
+        if not user_receivements_exist:
             vehicle = VehicleReceivment.objects.create(**validated_data)
             return vehicle
         raise IntegrityError("Record exist in db")
@@ -149,3 +152,13 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         if not truck:
             return False
         return True
+
+class TruckPhotoComplain(serializers.ModelSerializer):
+    class Meta:
+        model = TruckComplainPhoto
+        fields = '__all__'
+
+    def create(self, validated_data):
+        photo = TruckPhotoComplain.objects.create(**validated_data)
+        return photo
+
