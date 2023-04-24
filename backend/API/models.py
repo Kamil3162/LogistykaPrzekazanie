@@ -241,7 +241,7 @@ class VehicleReceivment(models.Model):
     complain = models.CharField(max_length=1, choices=COMPLAIN, default='N')
 
     def __str__(self):
-        return str(self.id)
+        return f"Receivment {self.truck.brand}"
 
 class TruckComplainPhoto(models.Model):
     receivment = models.ForeignKey(VehicleReceivment,

@@ -35,7 +35,7 @@ function TruckPhotoSend() {
     let handlesubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("photo", photo);
+        formData.append("truck_photo", photo);
         try {
             client.post("api/vehicle-receivements/complain/add", formData, {
                 headers: {

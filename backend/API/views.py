@@ -270,14 +270,23 @@ class ReceivmentTruckComplain(APIView):
 		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 	def post(self, request):
-		print(request.FILES)
 		information = request.data
+		receivment = VehicleReceivment.objects.get(user=request.user, data_ended=None)
+		information['receivment'] = receivment.pk
 		serializer = serializers.TruckPhotoComplain(data=information)
 		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+			try:
+				information['receivment'] = receivment
+				print(information)
+				complain = serializer.create(information)
+				complain.save()
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			except Exception as e:
+				print(str(e))
+				return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 		else:
-			return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+			print(serializer.errors)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

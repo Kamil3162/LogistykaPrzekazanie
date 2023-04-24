@@ -159,6 +159,6 @@ class TruckPhotoComplain(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        photo = TruckPhotoComplain.objects.create(**validated_data)
+        photo = TruckComplainPhoto.objects.create(**validated_data)
         return photo
 
