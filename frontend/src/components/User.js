@@ -15,7 +15,7 @@ function User(){
     })
     .then(response => {
       console.log("to jest data z usera")
-      console.log(response.data.user);
+      console.log(response.data);
       setCurrentUser(response.data.user);
     })
     .catch(error => {

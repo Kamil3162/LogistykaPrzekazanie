@@ -29,7 +29,7 @@ function TruckPhotoSend() {
     };
 
     const handleCheckboxChange = (e) => {
-        // handle checkbox change here and store the selected options to a state
+        setReceivments(e.target.value)
     };
 
     let handlesubmit = async (e) => {
@@ -49,7 +49,6 @@ function TruckPhotoSend() {
             console.log(photo);
         }
     };
-
     return (
         <div>
             <h1>Upload Photo</h1>
@@ -67,5 +66,30 @@ function TruckPhotoSend() {
             </ul>
         </div>
     );
+    /*
+    return (
+        <div>
+            <h1>Upload Photo</h1>
+            <input type="file" onChange={handlePhotoChange} />
+            <button onClick={handlesubmit}>Upload</button>
+
+            <ul>
+              {reveivments.map(receivement => (
+                <li key={receivement.id}>
+                  <input type="checkbox" value={receivement.id} onChange={handleCheckboxChange} />
+                  <span>ID: {receivement.id}, </span>
+                  <span>Created: {receivement.data_created}, </span>
+                  <span>Ended: {receivement.data_ended || 'N/A'}, </span>
+                  <span>Complain: {receivement.complain}, </span>
+                  <span>Truck: {receivement.truck}, </span>
+                  <span>Semi Trailer: {receivement.semi_trailer}, </span>
+                  <span>User: {receivement.user}</span>
+                </li>
+              ))}
+            </ul>
+        </div>
+    );
+
+     */
 }
 export default TruckPhotoSend;

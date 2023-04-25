@@ -1,9 +1,8 @@
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import login, logout
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from . import serializers
@@ -13,8 +12,8 @@ from .models import (
 					Truck,
 					TruckEquipment,
 					SemiTrailerEquipment,
-					VehicleReceivment)
-from rest_framework.decorators import api_view
+					VehicleReceivment,
+					TruckComplainPhoto)
 import datetime
 '''
 	Login part - 
@@ -266,18 +265,23 @@ class ReceivmentTruckComplain(APIView):
 	parser_classes = [MultiPartParser, FormParser]
 
 	def get(self, request):
-		queryset = VehicleReceivment.objects.all()
-		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
+		queryset = TruckComplainPhoto.objects.all()
+		serializer = serializers.TruckPhotoComplainSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
+
 	def post(self, request):
 		information = request.data
-		receivment = VehicleReceivment.objects.get(user=request.user, data_ended=None)
+		print(information)
+		receivment = get_object_or_404(VehicleReceivment,user=request.user, data_ended=None)
+		#object1 = TruckComplainPhoto.objects.create(receivment=receivment, truck_photo=information['truck_photo'])
+		#print(object1)
+		print("esa")
 		information['receivment'] = receivment.pk
-		serializer = serializers.TruckPhotoComplain(data=information)
+		serializer = serializers.TruckPhotoComplainSerializer(data=information)
 		if serializer.is_valid():
 			try:
 				information['receivment'] = receivment
-				print(information)
+				print(information['receivment'])
 				complain = serializer.create(information)
 				complain.save()
 				return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -107,7 +107,7 @@ class SemiTrailerSerializer(serializers.ModelSerializer):
         instance.production_year = validated_data.get('production_year',
                                                       instance.production_year)
         instance.registration_number = validated_data.get('registration_number',
-                                                          intance.registration_number)
+                                                          instance.registration_number)
         instance.semi_note = validated_data.get('semi_note', instance.semi_note)
         instance.save()
         return instance
@@ -153,12 +153,18 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
             return False
         return True
 
-class TruckPhotoComplain(serializers.ModelSerializer):
+class TruckPhotoComplainSerializer(serializers.ModelSerializer):
     class Meta:
         model = TruckComplainPhoto
         fields = '__all__'
 
     def create(self, validated_data):
-        photo = TruckComplainPhoto.objects.create(**validated_data)
+        print(type(self.fields))
+        if isinstance(validated_data.get('receivment'),VehicleReceivment):
+            print("Hello world")
+        print(validated_data.get('receivment'))
+        print(validated_data.get('truck_photo'))
+        photo = TruckComplainPhoto.objects.create(receivment=validated_data.get('receivment'),
+                                                  truck_photo=validated_data.get('truck_photo'))
         return photo
 
