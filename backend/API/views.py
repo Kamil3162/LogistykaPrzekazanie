@@ -272,7 +272,9 @@ class ReceivmentTruckComplain(APIView):
 	def post(self, request):
 		information = request.data
 		print(information)
-		receivment = get_object_or_404(VehicleReceivment,user=request.user, data_ended=None)
+		receivment = get_object_or_404(VehicleReceivment,
+									   user=request.user,
+									   data_ended=None)
 		#object1 = TruckComplainPhoto.objects.create(receivment=receivment, truck_photo=information['truck_photo'])
 		#print(object1)
 		print("esa")
@@ -292,7 +294,16 @@ class ReceivmentTruckComplain(APIView):
 			print(serializer.errors)
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class ReceivmentSemiTrailerComplain(APIView):
+	authentication_classes = (SessionAuthentication, )
+	permission_classes = (permissions.IsAuthenticated, )
+	parser_classes = [MultiPartParser, FormParser]
 
+	def get(self, request):
+		pass
+
+	def post(self, request):
+		pass
 
 
 """

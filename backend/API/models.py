@@ -147,6 +147,7 @@ class TruckEquipment(models.Model):
     avaiable = models.CharField(choices=CHOICES, blank=False,max_length=4)
     tire_pumping_wire = models.BooleanField(default=True, blank=False)
     complete_status = models.BooleanField(default=True)
+
     def __str__(self):
         return str(self.truck)
 
@@ -172,6 +173,7 @@ class SemiTrailer(models.Model):
 
     semi_note = models.BooleanField(default=True, blank=False)
     avaiable = models.CharField(max_length=4, choices=CHOICES, default='Wol', blank=False)
+
     def __str__(self):
         return self.registration_number
 

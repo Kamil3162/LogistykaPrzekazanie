@@ -4,19 +4,21 @@ import React, { useState, useEffect } from "react";
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
 });
-const endpoint = 'api/vehicle-receivements/complain/add';
+
 client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
 
 function TruckPhotoSend() {
     const [photo, setPhoto] = useState(null);
-    const [reveivments, setReceivments] = useState([]);
+    const [receivments, setReceivments] = useState([]);
 
     const generateData = () => {
-        client.get('api/vehicle-receivements/complain/add', {}).then(response => {
-            console.log(response);
-            setReceivments(response.data); // set received data to state
+        client.get('/api/vehicle-receivements/complain/add/',
+            {})
+            .then(response => {
+                console.log(response.data);
+                setReceivments(response.data); // set received data to state
         })
     }
 
@@ -25,25 +27,26 @@ function TruckPhotoSend() {
     }, []);
 
     const handlePhotoChange = (e) => {
-        setPhoto(e.target.files[0]);
+        setPhoto(e.target.files);
     };
 
     const handleCheckboxChange = (e) => {
         setReceivments(e.target.value)
     };
 
-    let handlesubmit = async (e) => {
+    let handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("truck_photo", photo);
+        for(let i=0;i<photo.length; i++){
+            formData.append("truck_photo", photo[i]);
+        }
         try {
-            client.post("api/vehicle-receivements/complain/add", formData, {
+            const response = await client.post("api/vehicle-receivements/complain/add", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }
-            }).then(response => {
-                console.log("Pomyślnie wysłano zdjęcie");
             });
+            console.log("Pomyślnie wysłano zdjęcie");
         } catch (error) {
             console.log(error);
             console.log(photo);
@@ -53,43 +56,23 @@ function TruckPhotoSend() {
         <div>
             <h1>Upload Photo</h1>
             <input type="file" onChange={handlePhotoChange} />
-            <button onClick={handlesubmit}>Upload</button>
-
-            {/* render data from GET request */}
+            <button onClick={handleSubmit}>Upload</button>
             <ul>
-                {reveivments.map(receivement => (
+                {Array.isArray(receivments) ? receivments.map(receivement => (
                     <li key={receivement.id}>
                         <input type="checkbox" value={receivement.id} onChange={handleCheckboxChange} />
-                        {receivement.data_ended}
+                        <span>ID: {receivement.id}, </span>
+                        <span>Created: {receivement.data_created}, </span>
+                        <span>Ended: {receivement.data_ended || 'N/A'}, </span>
+                        <span>Complain: {receivement.complain}, </span>
+                        <span>Truck: {receivement.truck}, </span>
+                        <span>Semi Trailer: {receivement.semi_trailer}, </span>
+                        <span>User: {receivement.user}</span>
                     </li>
-                ))}
+                )):null}
             </ul>
         </div>
     );
-    /*
-    return (
-        <div>
-            <h1>Upload Photo</h1>
-            <input type="file" onChange={handlePhotoChange} />
-            <button onClick={handlesubmit}>Upload</button>
-
-            <ul>
-              {reveivments.map(receivement => (
-                <li key={receivement.id}>
-                  <input type="checkbox" value={receivement.id} onChange={handleCheckboxChange} />
-                  <span>ID: {receivement.id}, </span>
-                  <span>Created: {receivement.data_created}, </span>
-                  <span>Ended: {receivement.data_ended || 'N/A'}, </span>
-                  <span>Complain: {receivement.complain}, </span>
-                  <span>Truck: {receivement.truck}, </span>
-                  <span>Semi Trailer: {receivement.semi_trailer}, </span>
-                  <span>User: {receivement.user}</span>
-                </li>
-              ))}
-            </ul>
-        </div>
-    );
-
-     */
 }
 export default TruckPhotoSend;
+

@@ -19,20 +19,19 @@ function App() {
           <a href="/login">
               zaloguj
           </a>
-
+          <span> </span>
           <a href="/logout">
               Wyloguj
           </a>
-
-          Hi this is react main
+            <span> </span>
           <a href="/user">
               User dane
           </a>
-
+            <span> </span>
           <a href="/report/receivment">
-              Report
+              Report - receivment photo
           </a>
-
+           <br/>
           <a href="/vehicle-receivments">
               Vehicle Receivments
           </a>
