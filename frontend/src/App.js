@@ -9,7 +9,7 @@ import User from "./components/User";
 import VehicleReceivments from "./components/VehicleReceivments";
 import TruckPhotoReceivment from "./components/TruckPhotoReceivment";
 import SemiTrailerPhotoReceivment from "./components/SemiTrailerPhotoReceivment";
-
+import EquipmentTruckReport from "./components/EquipmentTruckReport";
 /*
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -37,9 +37,8 @@ function App() {
           <a href="/vehicle-receivments">
               Vehicle Receivments
           </a>
-          <br/>
-          <a href="/report/receivment/semitrailer">
-              SemiTrailer Photo
+          <a href="/report/receivment/truck/equipment">
+              Truck Equipment
           </a>
           <Routes>
             <Route path="/login" element={<Login/>}/>
@@ -48,6 +47,7 @@ function App() {
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
             <Route path="/report/receivment" element={<TruckPhotoReceivment/>}/>
             <Route path="/report/receivment/semitrailer" element={<SemiTrailerPhotoReceivment/>}/>
+            <Route path="/report/receivment/truck/equipment" element={<EquipmentTruckReport/>}/>
           </Routes>
       </div>
   );

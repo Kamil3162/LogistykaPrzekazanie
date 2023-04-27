@@ -130,34 +130,6 @@ class Truck(models.Model):
         except Exception as e:
             print(e.__traceback__)
 
-class TruckEquipment(models.Model):
-    CHOICES = (
-        ('Wol','Wolny'),
-        ('Zaj','Zajety'),
-        ('Awar','Awaria')
-    )
-    truck = models.ForeignKey(Truck,
-                              on_delete=models.CASCADE,
-                              blank=False)
-    chest = models.BooleanField(default=True, blank=False)
-    chains = models.BooleanField(default=True, blank=False)
-    jack_hitch = models.BooleanField(default=True, blank=False)
-    planetar_key = models.BooleanField(default=True, blank=False)
-    manometer = models.BooleanField(default=True, blank=False)
-    avaiable = models.CharField(choices=CHOICES, blank=False,max_length=4)
-    tire_pumping_wire = models.BooleanField(default=True, blank=False)
-    complete_status = models.BooleanField(default=True)
-
-    def __str__(self):
-        return str(self.truck)
-
-    def status_checker(self):
-        if all(self.chest, self.chains, self.jack_hitch,
-               self.planetar_key, self.manometer, self.tire_pumping_wire):
-            self.complete_status = True
-        self.complete_status = False
-
-
 class SemiTrailer(models.Model):
     CHOICES = (
         ('Wol', 'Wolny'),
@@ -183,31 +155,6 @@ class SemiTrailer(models.Model):
             self.avaiable = choice
         except Exception as e:
             print(e.__traceback__)
-
-
-class SemiTrailerEquipment(models.Model):
-    semi_trailer = models.ForeignKey(SemiTrailer,
-                                     on_delete=models.CASCADE,
-                                     blank=False)
-    belts = models.IntegerField(default=6,
-                                validators=[MinValueValidator(6),
-                                            MaxValueValidator(12)])
-    corners = models.IntegerField(default=8,
-                                  validators=[MinValueValidator(8),
-                                              MaxValueValidator(16)])
-    aluminium_stick = models.IntegerField(default=12,
-                                          validators=[MinValueValidator(12),
-                                                      MaxValueValidator(20)])
-    wide_stick = models.IntegerField(default=2,
-                                     validators=[MinValueValidator(2),
-                                                 MaxValueValidator(6)])
-    ladder = models.BooleanField(default=True, blank=False)
-    roof_stick = models.BooleanField(default=True, blank=False)
-    dimenstion_board = models.BooleanField(default=True, blank=False)
-
-    def __str__(self):
-        return self.semi_trailer.id
-
 
 class VehicleReceivment(models.Model):
     """
@@ -245,6 +192,7 @@ class VehicleReceivment(models.Model):
     def __str__(self):
         return f"Receivment {self.truck.brand}"
 
+
 class TruckComplainPhoto(models.Model):
     receivment = models.ForeignKey(VehicleReceivment,
                                    on_delete=models.CASCADE,
@@ -256,3 +204,51 @@ class SemiTrailerComplainPhoto(models.Model):
                                    on_delete=models.CASCADE,
                                    blank=False)
     semitrailer_photo = models.ImageField(upload_to='media', blank=False)
+
+
+class TruckEquipment(models.Model):
+    '''receivment = models.ForeignKey(VehicleReceivment,
+                                   on_delete=models.CASCADE,
+                                   blank=False)'''
+    truck = models.ForeignKey(Truck,
+                              on_delete=models.CASCADE,
+                              blank=False)
+    chest = models.BooleanField(default=True, blank=False)
+    chains = models.BooleanField(default=True, blank=False)
+    jack_hitch = models.BooleanField(default=True, blank=False)
+    planetar_key = models.BooleanField(default=True, blank=False)
+    manometer = models.BooleanField(default=True, blank=False)
+    tire_pumping_wire = models.BooleanField(default=True, blank=False)
+    complete_status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return str(self.truck)
+
+    def status_checker(self):
+        if all(self.chest, self.chains, self.jack_hitch,
+               self.planetar_key, self.manometer, self.tire_pumping_wire):
+            self.complete_status = True
+        self.complete_status = False
+
+class SemiTrailerEquipment(models.Model):
+    semi_trailer = models.ForeignKey(SemiTrailer,
+                                     on_delete=models.CASCADE,
+                                     blank=False)
+    belts = models.IntegerField(default=6,
+                                validators=[MinValueValidator(6),
+                                            MaxValueValidator(12)])
+    corners = models.IntegerField(default=8,
+                                  validators=[MinValueValidator(8),
+                                              MaxValueValidator(16)])
+    aluminium_stick = models.IntegerField(default=12,
+                                          validators=[MinValueValidator(12),
+                                                      MaxValueValidator(20)])
+    wide_stick = models.IntegerField(default=2,
+                                     validators=[MinValueValidator(2),
+                                                 MaxValueValidator(6)])
+    ladder = models.BooleanField(default=True, blank=False)
+    roof_stick = models.BooleanField(default=True, blank=False)
+    dimenstion_board = models.BooleanField(default=True, blank=False)
+
+    def __str__(self):
+        return self.semi_trailer.id

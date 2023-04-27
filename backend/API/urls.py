@@ -21,7 +21,12 @@ urlpatterns = [
     path('vehicle-receivements/complain/add',
          views.ReceivmentTruckComplain.as_view()),
     path('vehicle-receivements/complain/semitruck/add',
-         views.ReceivmentSemiTrailerComplain.as_view(), name='SemiTruckComplain')
+         views.ReceivmentSemiTrailerComplain.as_view(),
+         name='SemiTruckComplain'),
+    path('vehicle-receivments/complain/equipment/semitrailer',
+         views.EquipmentSemiTrailerReceivmentReport.as_view()),
+    path('vehicle-receivments/complain/equipment/truck',
+         views.EquipmentTruckReceivementReport.as_view()),
     # photo add tuck
     # photo add semitruck
 ]

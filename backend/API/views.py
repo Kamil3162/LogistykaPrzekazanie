@@ -330,6 +330,66 @@ class ReceivmentSemiTrailerComplain(APIView):
 							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class EquipmentTruckReceivementReport(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request):
+		try:
+			receivment = VehicleReceivment.objects.get(
+				user=request.user,
+				data_ended=None
+			)
+			queryset = TruckEquipment.objects.get(truck=receivment.truck)
+			serializer = serializers.TruckEqupmentSerializer(
+				queryset, many=True)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({"error":(str(e))}, status=status.HTTP_200_OK)
+
+	def post(self, request):
+		"""
+			if equipment exist with truck is ok but
+			1. We have to create a limit to do this only ones if receive exist
+			2. If receivment exist we have to check equipment
+			3. And check a number and assocication
+		"""
+		try:
+			receivment = VehicleReceivment.objects.get(
+				user=request.user,
+				data_ended=None
+			)
+			truck = receivment.truck
+			queryset = TruckEquipment.objects.get(
+				truck=truck,
+				receivment=receivment
+			)
+			if queryset:
+				return Response({"Your data already exist"},
+								status=status.HTTP_409_CONFLICT)
+			else:
+				information = request.data
+				information['truck'] = truck.pk
+				information['receivment'] = receivment.pk
+				serializer = serializers.TruckEqupmentSerializer(information)
+				if serializer.is_valid():
+					information['truck'] = truck
+					information['receivment'] = receivment
+					equipment = serializer.create(information)
+					equipment.status_checker()
+					equipment.save()
+					return Response(serializer.data, status=status.HTTP_201_CREATED)
+				else:
+					return Response(serializer.errors,
+									status=status.HTTP_406_NOT_ACCEPTABLE)
+		except Exception as e:
+			return Response({"error":str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		return Response(status=status.HTTP_200_OK)
+
+
+class EquipmentSemiTrailerReceivmentReport(APIView):
+	pass
 
 
 """

@@ -54,6 +54,10 @@ function TruckPhotoSend() {
     };
     return (
         <div>
+            <br/>
+          <a href="/report/receivment/semitrailer">
+              SemiTrailer Photo
+          </a>
             <h1>Upload Photo</h1>
             <input type="file" onChange={handlePhotoChange} />
             <button onClick={handleSubmit}>Upload</button>

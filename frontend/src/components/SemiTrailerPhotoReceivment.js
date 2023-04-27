@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useRef} from "react";
 
 
 const client = axios.create({
@@ -12,9 +12,11 @@ client.defaults.withCredentials = true;
 const endpoint = '/api/vehicle-receivements/complain/semitruck/add';
 function SemiTrailerPhoto(){
     const [photo, setPhoto] = useState(null);
+    const inputFileRef = useRef(null);
 
     let handlePhoto = (e) =>{
         setPhoto(e.target.files[0]);
+        inputFileRef.current.value = "";
     }
 
     let handleSubmit = async(e) => {
@@ -29,14 +31,16 @@ function SemiTrailerPhoto(){
             });
             console.log("Wysłano zdjecie");
             console.log(response);
+            alert("dodałes zdjecie");
         }catch (error){
             console.log(error);
         }
     }
     return (
         <div>
+
             <h1>Upload SemitruckPhoto</h1>
-            <input type="file" onChange={handlePhoto}/>
+            <input type="file" onChange={handlePhoto} ref={inputFileRef}/>
             <button type="submit" onClick={handleSubmit}>Upload</button>
         </div>
     )

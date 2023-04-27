@@ -85,6 +85,12 @@ class TruckEqupmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TruckEquipment
         fields = '__all__'
+
+    def create(self, validated_data):
+        equipment = TruckEquipment.objects.create(**validated_data)
+        return equipment
+
+
 """
     Sami trucks serializers
 """
