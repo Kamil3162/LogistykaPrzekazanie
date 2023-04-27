@@ -13,7 +13,8 @@ from .models import (
 					TruckEquipment,
 					SemiTrailerEquipment,
 					VehicleReceivment,
-					TruckComplainPhoto)
+					TruckComplainPhoto,
+					SemiTrailerComplainPhoto)
 import datetime
 '''
 	Login part - 
@@ -222,7 +223,6 @@ class VehicleReceivments(APIView):
 		information = request.data
 		truck_num = get_object_or_404(Truck, pk=information.get('truck'))
 		semi_trailer = get_object_or_404(SemiTrailer, pk=information.get('semi_trailer'))
-		user = request.user
 		date_today = str(datetime.datetime.today()).split(" ")[0]
 		information['data_created'] = date_today
 		information['user'] = request.user.pk
@@ -271,13 +271,9 @@ class ReceivmentTruckComplain(APIView):
 
 	def post(self, request):
 		information = request.data
-		print(information)
 		receivment = get_object_or_404(VehicleReceivment,
 									   user=request.user,
 									   data_ended=None)
-		#object1 = TruckComplainPhoto.objects.create(receivment=receivment, truck_photo=information['truck_photo'])
-		#print(object1)
-		print("esa")
 		information['receivment'] = receivment.pk
 		serializer = serializers.TruckPhotoComplainSerializer(data=information)
 		if serializer.is_valid():
@@ -295,15 +291,45 @@ class ReceivmentTruckComplain(APIView):
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ReceivmentSemiTrailerComplain(APIView):
-	authentication_classes = (SessionAuthentication, )
-	permission_classes = (permissions.IsAuthenticated, )
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
 	parser_classes = [MultiPartParser, FormParser]
 
 	def get(self, request):
-		pass
+		queryset = SemiTrailerComplainPhoto.objects.all()
+		serializer = serializers.SemiTrailerComplainSerializer(queryset, many=True)
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
-		pass
+		"""
+			Now we send a data:
+			1. Photo those we want to share
+			2. We have to get currect receivment of user
+			3. In receivment we can only one receivment with status none for user
+			4. He can make a couples in one time it is impossible
+			5. In request we have also attributes like request.auth and request.user
+		"""
+		try:
+			information = request.data
+			queryset = get_object_or_404(VehicleReceivment,
+										 data_ended=None,
+										 user=request.user)
+			information['receivment'] = queryset.pk
+			serializer = serializers.SemiTrailerComplainSerializer(data=information)
+			if serializer.is_valid():
+				information['receivment'] = queryset
+				semi_trailer_photo = serializer.create(information)
+				semi_trailer_photo.save()
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			else:
+				print(serializer.errors)
+				return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+		except Exception as e:
+			print(str(e))
+			return Response({"error": str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 
 """

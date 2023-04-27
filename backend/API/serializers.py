@@ -168,3 +168,15 @@ class TruckPhotoComplainSerializer(serializers.ModelSerializer):
                                                   truck_photo=validated_data.get('truck_photo'))
         return photo
 
+class SemiTrailerComplainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SemiTrailerComplainPhoto
+        fields = "__all__"
+
+    def create(self, validated_data):
+        complain_photo = SemiTrailerComplainPhoto.objects.create(
+            receivment=validated_data.get('receivment'),
+            semitrailer_photo=validated_data.get('semitrailer_photo'))
+        return complain_photo
+
+
