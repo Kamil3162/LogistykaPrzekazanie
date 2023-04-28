@@ -207,9 +207,10 @@ class SemiTrailerComplainPhoto(models.Model):
 
 
 class TruckEquipment(models.Model):
-    '''receivment = models.ForeignKey(VehicleReceivment,
+    receivment = models.ForeignKey(VehicleReceivment,
                                    on_delete=models.CASCADE,
-                                   blank=False)'''
+                                   blank=False,
+                                   default=None)
     truck = models.ForeignKey(Truck,
                               on_delete=models.CASCADE,
                               blank=False)
@@ -225,27 +226,27 @@ class TruckEquipment(models.Model):
         return str(self.truck)
 
     def status_checker(self):
-        if all(self.chest, self.chains, self.jack_hitch,
-               self.planetar_key, self.manometer, self.tire_pumping_wire):
+        if all([self.chest, self.chains, self.jack_hitch,
+               self.planetar_key, self.manometer, self.tire_pumping_wire]):
             self.complete_status = True
         self.complete_status = False
 
 class SemiTrailerEquipment(models.Model):
+    receivment = models.ForeignKey(VehicleReceivment,
+                                   on_delete=models.CASCADE,
+                                   blank=False,
+                                   default=None)
     semi_trailer = models.ForeignKey(SemiTrailer,
                                      on_delete=models.CASCADE,
                                      blank=False)
     belts = models.IntegerField(default=6,
-                                validators=[MinValueValidator(6),
-                                            MaxValueValidator(12)])
+                                validators=[MaxValueValidator(12)])
     corners = models.IntegerField(default=8,
-                                  validators=[MinValueValidator(8),
-                                              MaxValueValidator(16)])
+                                  validators=[MaxValueValidator(16)])
     aluminium_stick = models.IntegerField(default=12,
-                                          validators=[MinValueValidator(12),
-                                                      MaxValueValidator(20)])
+                                          validators=[MaxValueValidator(20)])
     wide_stick = models.IntegerField(default=2,
-                                     validators=[MinValueValidator(2),
-                                                 MaxValueValidator(6)])
+                                     validators=[MaxValueValidator(6)])
     ladder = models.BooleanField(default=True, blank=False)
     roof_stick = models.BooleanField(default=True, blank=False)
     dimenstion_board = models.BooleanField(default=True, blank=False)

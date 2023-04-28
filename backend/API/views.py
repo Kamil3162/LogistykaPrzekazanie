@@ -340,12 +340,12 @@ class EquipmentTruckReceivementReport(APIView):
 				user=request.user,
 				data_ended=None
 			)
-			queryset = TruckEquipment.objects.get(truck=receivment.truck)
+			queryset = TruckEquipment.objects.filter(truck=receivment.truck)
 			serializer = serializers.TruckEqupmentSerializer(
 				queryset, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
-			return Response({"error":(str(e))}, status=status.HTTP_200_OK)
+			return Response({"error":(str(e))}, status=status.HTTP_400_BAD_REQUEST)
 
 	def post(self, request):
 		"""
@@ -354,43 +354,88 @@ class EquipmentTruckReceivementReport(APIView):
 			2. If receivment exist we have to check equipment
 			3. And check a number and assocication
 		"""
+		receivment = VehicleReceivment.objects.get(
+			user=request.user,
+			data_ended=None
+		)
+		print("this is receimvnet")
+		truck = receivment.truck
+		try:
+			queryset = TruckEquipment.objects.get(
+				truck=truck,
+				receivment=receivment
+			)
+			print('queryset')
+			return Response({"error":"Your data already exist"},
+							status=status.HTTP_409_CONFLICT)
+		except TruckEquipment.DoesNotExist:
+			information = request.data
+			information['truck'] = truck.pk
+			information['receivment'] = receivment.pk
+			serializer = serializers.TruckEqupmentSerializer(
+				data=information)
+			print('esa')
+			if serializer.is_valid():
+				information['truck'] = truck
+				information['receivment'] = receivment
+				equipment = serializer.create(information)
+				equipment.status_checker()
+				equipment.save()
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			else:
+				return Response(serializer.errors,
+								status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class EquipmentSemiTrailerReceivmentReport(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request):
 		try:
 			receivment = VehicleReceivment.objects.get(
 				user=request.user,
 				data_ended=None
 			)
-			truck = receivment.truck
-			queryset = TruckEquipment.objects.get(
-				truck=truck,
-				receivment=receivment
-			)
-			if queryset:
-				return Response({"Your data already exist"},
-								status=status.HTTP_409_CONFLICT)
-			else:
-				information = request.data
-				information['truck'] = truck.pk
-				information['receivment'] = receivment.pk
-				serializer = serializers.TruckEqupmentSerializer(information)
-				if serializer.is_valid():
-					information['truck'] = truck
-					information['receivment'] = receivment
-					equipment = serializer.create(information)
-					equipment.status_checker()
-					equipment.save()
-					return Response(serializer.data, status=status.HTTP_201_CREATED)
-				else:
-					return Response(serializer.errors,
-									status=status.HTTP_406_NOT_ACCEPTABLE)
+
+			queryset = SemiTrailerEquipment.objects.filter(receivment=receivment)
+			serializer = serializers.SemiTrailerEquipSerializer(
+				queryset, many=True)
+			return Response(serializer.data,
+							status=status.HTTP_200_OK)
 		except Exception as e:
 			return Response({"error":str(e)},
 							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-		return Response(status=status.HTTP_200_OK)
 
-
-class EquipmentSemiTrailerReceivmentReport(APIView):
-	pass
-
+	def post(self, request):
+		user = request.user
+		receivment = VehicleReceivment.objects.get(
+			user=request.user,
+			data_ended=None
+		)
+		semi_trailer = receivment.semi_trailer
+		try:
+			queryset = SemiTrailerEquipment.objects.get(
+				receivment=receivment,
+				semi_trailer=semi_trailer
+			)
+			print("esa")
+			return Response({"error":"data exist in db"},
+							status=status.HTTP_400_BAD_REQUEST)
+		except SemiTrailerEquipment.DoesNotExist:
+			information = request.data
+			information['semi_trailer'] = semi_trailer.pk
+			information['receivment'] = receivment.pk
+			serializer = serializers.SemiTrailerEquipSerializer(data=information)
+			if serializer.is_valid():
+				information['semi_trailer'] = semi_trailer
+				information['receivment'] = receivment
+				equipment = serializer.create(information)
+				return Response(serializer.data,
+								status=status.HTTP_201_CREATED)
+			else:
+				print(serializer.errors)
+				return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 """
 	tworzymy odbior dla naszego kierowcy -
@@ -404,4 +449,3 @@ class EquipmentSemiTrailerReceivmentReport(APIView):
 	5. Dodawanie zdjec przy odbiorze czy coś się zgadza
 	6. DOdawanie zdjec w trasie jak coś sie zniszczy
 """
-

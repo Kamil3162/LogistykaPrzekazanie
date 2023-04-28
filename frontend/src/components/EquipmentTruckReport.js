@@ -39,67 +39,74 @@ function TruckEquipmentForm() {
         }
     }catch (error){
         console.log(error);
+
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <br />
-      <label>
-        Chest:
-        <input
-          type="checkbox"
-          checked={chest}
-          onChange={(event) => setChest(event.target.checked)}
-        />
-      </label>
-      <br />
-      <label>
-        Chains:
-        <input
-          type="checkbox"
-          checked={chains}
-          onChange={(event) => setChains(event.target.checked)}
-        />
-      </label>
-      <br />
-      <label>
-        Jack Hitch:
-        <input
-          type="checkbox"
-          checked={jackHitch}
-          onChange={(event) => setJackHitch(event.target.checked)}
-        />
-      </label>
-      <br />
-      <label>
-        Planetar Key:
-        <input
-          type="checkbox"
-          checked={planetarKey}
-          onChange={(event) => setPlanetarKey(event.target.checked)}
-        />
-      </label>
-      <br />
-      <label>
-        Manometer:
-        <input
-          type="checkbox"
-          checked={manometer}
-          onChange={(event) => setManometer(event.target.checked)}
-        />
-      </label>
-      <br />
-      <label>
-        Tire Pumping Wire:
-        <input
-          type="checkbox"
-          checked={tirePumpingWire}
-          onChange={(event) => setTirePumpingWire(event.target.checked)}
-        />
-      </label>
-      <br />
-      <button type="submit">Submit</button>
-    </form>
+      <div>
+          <a href="/report/receivment/semitruck/equipment">
+              SemiTruck Equipment
+          </a>
+          <form onSubmit={handleSubmit}>
+              <br />
+              <label>
+                Chest:
+                <input
+                  type="checkbox"
+                  checked={chest}
+                  onChange={(event) => setChest(event.target.checked)}
+                />
+              </label>
+              <br />
+              <label>
+                Chains:
+                <input
+                  type="checkbox"
+                  checked={chains}
+                  onChange={(event) => setChains(event.target.checked)}
+                />
+              </label>
+              <br />
+              <label>
+                Jack Hitch:
+                <input
+                  type="checkbox"
+                  checked={jackHitch}
+                  onChange={(event) => setJackHitch(event.target.checked)}
+                />
+              </label>
+              <br />
+              <label>
+                Planetar Key:
+                <input
+                  type="checkbox"
+                  checked={planetarKey}
+                  onChange={(event) => setPlanetarKey(event.target.checked)}
+                />
+              </label>
+              <br />
+              <label>
+                Manometer:
+                <input
+                  type="checkbox"
+                  checked={manometer}
+                  onChange={(event) => setManometer(event.target.checked)}
+                />
+              </label>
+              <br />
+              <label>
+                Tire Pumping Wire:
+                <input
+                  type="checkbox"
+                  checked={tirePumpingWire}
+                  onChange={(event) => setTirePumpingWire(event.target.checked)}
+                />
+              </label>
+              <br />
+              <button type="submit">Submit</button>
+            </form>
+      </div>
+
   );
 }
 

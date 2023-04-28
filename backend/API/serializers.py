@@ -54,6 +54,9 @@ class SemiTrailerEquipSerializer(serializers.ModelSerializer):
         model = SemiTrailerEquipment
         fields = '__all__'
 
+    def create(self, validated_data):
+        equipment = SemiTrailerEquipment.objects.create(**validated_data)
+        return equipment
 
 class TruckSerializerAdd(serializers.ModelSerializer):
     class Meta:
