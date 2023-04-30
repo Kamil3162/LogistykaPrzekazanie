@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth import login, logout
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
@@ -14,13 +16,16 @@ from .models import (
 					SemiTrailerEquipment,
 					VehicleReceivment,
 					TruckComplainPhoto,
-					SemiTrailerComplainPhoto)
+					SemiTrailerComplainPhoto,
+					AppUser)
 import datetime
+from django.contrib.auth import get_user_model
 '''
 	Login part - 
 '''
 class UserRegister(APIView):
 	permission_classes = (permissions.AllowAny,)
+
 	def post(self, request):
 		clean_data = request.data
 		serializer = serializers.UserRegisterSerializer(data=clean_data)
@@ -199,44 +204,39 @@ class VehicleReceivments(APIView):
 	authentication_classes = (SessionAuthentication,)
 
 	def get(self, request):
-		queryset = VehicleReceivment.objects.all()
+		queryset = VehicleReceivment.objects.filter(user=request.user)
+		directors = AppUser.active_users()
+		print(directors.id)
 		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
-	'''
-	def post(self, request):
-		cleaned_data = request.data
-		try:
-			vehicle = serializers.VehicleReceivmentSerializer(data=cleaned_data)
-			if vehicle.check_existance(cleaned_data):
-				return Response({"error": "Its exists"}, status=status.HTTP_400_BAD_REQUEST)
-		except Exception as e:
-			serializer = serializers.VehicleReceivmentSerializer(data=cleaned_data)
-			if serializer.is_valid():
-				vehicle = serializer.create(cleaned_data)
-				vehicle.save()
-				return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-			else:
-				return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-	'''
 
 	def post(self, request):
+		"""
+			I think that kierownik will be choose automatticly - totaly
+			if user have permissions staff etc - director and he can make action
+			Brac lastlogin kiedy natapic np w tym dniu to znaczy ze jest w pracy
+		"""
 		information = request.data
+		directors = AppUser.objects.filter(is_staff=1)
+		director = random.choice(directors)
 		truck_num = get_object_or_404(Truck, pk=information.get('truck'))
 		semi_trailer = get_object_or_404(SemiTrailer, pk=information.get('semi_trailer'))
 		date_today = str(datetime.datetime.today()).split(" ")[0]
 		information['data_created'] = date_today
 		information['user'] = request.user.pk
+		information['sender'] = director.pk
 		serializer = serializers.VehicleReceivmentSerializer(data=information)
 		if serializer.is_valid():
 			information['truck'] = truck_num
 			information['semi_trailer'] = semi_trailer
 			information['user'] = request.user
+			information['sender'] = director
 			try:
 				receivment = serializer.create(information)
 				receivment.save()
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
 			except IntegrityError as e:
-				return Response({"error":"Record exist in db"}, status=status.HTTP_409_CONFLICT)
+				return Response({"error":"Something bad with data or duplication"}, status=status.HTTP_409_CONFLICT)
 		return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class VehicleReceivmentDetail(APIView):
@@ -250,6 +250,7 @@ class VehicleReceivmentDetail(APIView):
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
 			return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 	def post(self, request, pk):
 		try:
 			queryset = VehicleReceivment.objects.get(pk=pk)
@@ -281,6 +282,8 @@ class ReceivmentTruckComplain(APIView):
 				information['receivment'] = receivment
 				print(information['receivment'])
 				complain = serializer.create(information)
+				receivment.complain = "T"
+				receivment.save()
 				complain.save()
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
 			except Exception as e:
@@ -436,6 +439,32 @@ class EquipmentSemiTrailerReceivmentReport(APIView):
 			else:
 				print(serializer.errors)
 				return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ActiveReceivment(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request):
+		try:
+			user = request.user
+			receivment = VehicleReceivment.objects.get(
+				user=user, data_ended=None)
+			serializer = serializers.VehicleReceivmentSerializer(receivment)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except VehicleReceivment.DoesNotExist:
+			return Response({"error":"You havent active Recivments"},
+							status=status.HTTP_200_OK)
+
+class ReceivmentsApproval(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request):
+		user = request.user
+		pass
+
+	def post(self, request): pass
+
 
 """
 	tworzymy odbior dla naszego kierowcy -

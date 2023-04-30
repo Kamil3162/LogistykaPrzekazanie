@@ -110,6 +110,7 @@ class SemiTrailerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return SemiTrailer.objects.create(**validated_data)
+
     def update(self, instance, validated_data):
         instance.brand = validated_data.get('brand', instance.brand)
         instance.model = validated_data.get('model', instance.model)
@@ -133,9 +134,11 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         truck = validated_data.get('truck')
         truck.set_availability('Zaj')
         truck.save()
+        print(truck)
         semi_truck = validated_data.get('semi_trailer')
         semi_truck.set_availability('Zaj')
         semi_truck.save()
+        print(semi_truck)
         receivments_status_end = receivments.values_list('data_ended', flat=True)
         print(receivments_status_end)
         user_receivements_exist = any(receivments is None for receivments in receivments_status_end)
@@ -143,7 +146,7 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         if not user_receivements_exist:
             vehicle = VehicleReceivment.objects.create(**validated_data)
             return vehicle
-        raise IntegrityError("Record exist in db")
+        raise IntegrityError("Record exist in db maybe all is reserved")
 
     def update(self, instance, validated_data):
         instance.date_ended = validated_data.get('date_ended', instance.date_ended)

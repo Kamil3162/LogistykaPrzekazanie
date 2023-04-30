@@ -11,6 +11,7 @@ import TruckPhotoReceivment from "./components/TruckPhotoReceivment";
 import SemiTrailerPhotoReceivment from "./components/SemiTrailerPhotoReceivment";
 import EquipmentTruckReport from "./components/EquipmentTruckReport";
 import EquipmentSemitruckReport from './components/EquipmentSemitruckReport';
+import VehicleReceivment from "./components/VehicleReceivment";
 /*
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -38,8 +39,13 @@ function App() {
           <a href="/vehicle-receivments">
               Vehicle Receivments
           </a>
+          <br/>
           <a href="/report/receivment/truck/equipment">
               Truck Equipment
+          </a>
+          <br/>
+          <a href="/vehicle-receivments/add">
+              Make a receivment
           </a>
 
           <Routes>
@@ -47,6 +53,7 @@ function App() {
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/user" element={<User/>}/>
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
+            <Route path="/vehicle-receivments/add" element={<VehicleReceivment/>}/>
             <Route path="/report/receivment" element={<TruckPhotoReceivment/>}/>
             <Route path="/report/receivment/semitrailer" element={<SemiTrailerPhotoReceivment/>}/>
             <Route path="/report/receivment/truck/equipment" element={<EquipmentTruckReport/>}/>
