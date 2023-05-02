@@ -77,11 +77,24 @@ class AppUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
 class AppUserActiveManager(models.Manager):
     def get_queryset(self):
         users = super().get_queryset().filter(is_staff=1)
+        return users
 
+    def today_active_directors(self):
+        import datetime
+        data = self.get_queryset()
+        today = datetime.date.today()
+        print(type(today))
+        users = []
+        for user in data:
+            user_date = str(user.last_login).split(" ").__getitem__(0)
+            date_obj = datetime.datetime.strptime(user_date, "%Y-%m-%d").date()
+            print(type(date_obj), type(user_date))
+            if date_obj == today:
+                users.append(user)
+        return users
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=40, blank=False)
@@ -104,6 +117,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password']
     objects = AppUserManager()
+    active_users = AppUserActiveManager()
 
     def __str__(self):
         return self.email
@@ -143,6 +157,9 @@ class Truck(models.Model):
             self.avaiable = choice_dict[state]
         except KeyError:
             raise ValueError(f"{state} is not a valid choice for avaiable.")
+
+    def truck_list(self):
+        trucks = []
 
 
 class SemiTrailer(models.Model):

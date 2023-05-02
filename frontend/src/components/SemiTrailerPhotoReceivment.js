@@ -9,6 +9,9 @@ const client = axios.create({
 client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
+const handleRedirect = () => {
+    window.location.href = "/vehicle-receivments";
+};
 const endpoint = '/api/vehicle-receivements/complain/semitruck/add';
 function SemiTrailerPhoto(){
     const [photo, setPhoto] = useState(null);
@@ -42,6 +45,8 @@ function SemiTrailerPhoto(){
             <h1>Upload SemitruckPhoto</h1>
             <input type="file" onChange={handlePhoto} ref={inputFileRef}/>
             <button type="submit" onClick={handleSubmit}>Upload</button>
+            <br/>
+            <button onClick={handleRedirect}>Zakoncz</button>
         </div>
     )
 }

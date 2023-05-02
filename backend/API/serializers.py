@@ -148,6 +148,21 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
             return vehicle
         raise IntegrityError("Record exist in db maybe all is reserved")
 
+    def finish_action(self, validated_data):
+        user = validated_data.get('user')
+        truck = validated_data.get('truck')
+        truck.set_availability('Wol')
+        truck.save()
+        semi_trailer = validated_data.get('semi_trailer')
+        semi_trailer.set_availability('Wol')
+        semi_trailer.save()
+        print('zamiana stanów')
+        try:
+            receivment_statement = VehicleReceivment.objects.create(**validated_data)
+            return receivment_statement
+        except IntegrityError:
+            print("Data exist in db or data is not properly")
+
     def update(self, instance, validated_data):
         instance.date_ended = validated_data.get('date_ended', instance.date_ended)
         instance.save()

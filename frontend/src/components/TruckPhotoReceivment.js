@@ -8,7 +8,9 @@ const client = axios.create({
 client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
-
+const handleButtonClick = () => {
+    window.location.href = "/report/receivment/semitrailer";
+};
 function TruckPhotoSend() {
     const [photo, setPhoto] = useState(null);
     const [receivments, setReceivments] = useState([]);
@@ -75,6 +77,7 @@ function TruckPhotoSend() {
                     </li>
                 )):null}
             </ul>
+            <button onClick={handleButtonClick}>Dalej</button>
         </div>
     );
 }

@@ -8,47 +8,74 @@ client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
 
+
 const VehicleReceivmentForm = () => {
   const [truck, setTruck] = useState("");
-  const [semiTrailer, setSemiTrailer] = useState("");
+  const [semi_trailer, setSemi_trailer] = useState("");
   const [complain, setComplain] = useState("N");
+  const [semi_trailers, setSemiTrailers] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const data = {
       truck: truck,
-      semi_truck:semiTrailer,
+      semi_trailer:semi_trailer,
       complain: complain
   };
+  useEffect(() =>{
+      client.get('api/samitrucks',{
+          withCredentials:true
+      }).then(response =>{
+          setSemiTrailers(response.data);
+          console.log(response.data);
+      }).catch(error => {
+          console.log(error)
+      });
+  }, []);
 
+  const handleComplainChecker = () =>{
+      if (complain == "T"){
+          window.location.href = "/report/receivment";
+      }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    try{
-        client.post('api/vehicle-receivements')
-            .then(response =>{
-            console.log(response);
-            console.log("wyslano data");
-        })
-    }catch (error){
-        console.log(error);
-    }
+    client.post('api/vehicle-receivements', data)
+        .then(response =>{
+        console.log(response.data);
+        console.log("wyslano data");
+        handleComplainChecker();
+    }).catch (error => {
+        console.log(error.response);
+        alert("Prawdopodobnie twoje zlecenie jeszcze nie zostało skonczone")
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="truck">Truck:</label>
-      <input type="text" id="truck" value={truck} onChange={(e) => setTruck(e.target.value)} />
+      <div>
+          <div>
+              Data-
+              {semi_trailers.map(semitrailer => (
+                  <div key={semitrailer.id}>
+                    <p>{semitrailer.registration_number} Stan {semitrailer.avaiable}</p>
+                  </div>
+              ))}
+          </div>
+          <form onSubmit={handleSubmit}>
+              <label htmlFor="truck">Truck:</label>
+              <input type="checkbox" id="truck" checked={truck} onChange={(e) => setTruck(e.target.checked)} />
+              <label htmlFor="semi-trailer">Semi-trailer:</label>
+              <input type="text" id="semi-trailer" value={semi_trailer} onChange={(e) => setSemi_trailer(e.target.value)} />
 
-      <label htmlFor="semi-trailer">Semi-trailer:</label>
-      <input type="text" id="semi-trailer" value={semiTrailer} onChange={(e) => setSemiTrailer(e.target.value)} />
+              <label htmlFor="complain">Complain:</label>
+              <select id="complain" value={complain} onChange={(e) => setComplain(e.target.value)}>
+                <option value="N">Nie</option>
+                <option value="T">Tak</option>
+                <option value="A">Awaria</option>
+              </select>
 
-      <label htmlFor="complain">Complain:</label>
-      <select id="complain" value={complain} onChange={(e) => setComplain(e.target.value)}>
-        <option value="N">Nie</option>
-        <option value="T">Tak</option>
-        <option value="A">Awaria</option>
-      </select>
-
-      <button type="submit">Submit</button>
-    </form>
+              <button type="submit">Submit</button>
+            </form>
+      </div>
   );
 };
 

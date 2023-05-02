@@ -7,7 +7,13 @@ const client = axios.create({
 client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
-
+const handleButtonClick = () => {
+    const url = 'api/vehicle-receivements/finish';
+    client.post(url,{
+    }).then(response => {
+        console.log(response);
+    });
+};
 function VehicleReceivmentList() {
   const [vehicleReceivments, setVehicleReceivments] = useState([]);
 
@@ -37,6 +43,7 @@ function VehicleReceivmentList() {
           <h1>--------------</h1>
         </div>
       ))}
+    <button onClick={handleButtonClick}>Zdaj Pojazdy</button>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import SemiTrailerPhotoReceivment from "./components/SemiTrailerPhotoReceivment"
 import EquipmentTruckReport from "./components/EquipmentTruckReport";
 import EquipmentSemitruckReport from './components/EquipmentSemitruckReport';
 import VehicleReceivment from "./components/VehicleReceivment";
+
 /*
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -37,7 +38,7 @@ function App() {
           </a>
            <br/>
           <a href="/vehicle-receivments">
-              Vehicle Receivments
+              Your current Vehicle Receivments
           </a>
           <br/>
           <a href="/report/receivment/truck/equipment">

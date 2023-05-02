@@ -204,9 +204,7 @@ class VehicleReceivments(APIView):
 	authentication_classes = (SessionAuthentication,)
 
 	def get(self, request):
-		queryset = VehicleReceivment.objects.filter(user=request.user)
-		directors = AppUser.active_users()
-		print(directors.id)
+		queryset = VehicleReceivment.objects.all()
 		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -215,29 +213,92 @@ class VehicleReceivments(APIView):
 			I think that kierownik will be choose automatticly - totaly
 			if user have permissions staff etc - director and he can make action
 			Brac lastlogin kiedy natapic np w tym dniu to znaczy ze jest w pracy
+
+			-----------------------
+			I have to add auto assigment according to truck
 		"""
 		information = request.data
-		directors = AppUser.objects.filter(is_staff=1)
-		director = random.choice(directors)
-		truck_num = get_object_or_404(Truck, pk=information.get('truck'))
-		semi_trailer = get_object_or_404(SemiTrailer, pk=information.get('semi_trailer'))
-		date_today = str(datetime.datetime.today()).split(" ")[0]
-		information['data_created'] = date_today
-		information['user'] = request.user.pk
-		information['sender'] = director.pk
-		serializer = serializers.VehicleReceivmentSerializer(data=information)
-		if serializer.is_valid():
-			information['truck'] = truck_num
-			information['semi_trailer'] = semi_trailer
-			information['user'] = request.user
-			information['sender'] = director
-			try:
-				receivment = serializer.create(information)
-				receivment.save()
+		print(information.get('truck'))
+		print(information.get('semi_trailer'))
+		try:
+			directors = AppUser.active_users.today_active_directors()
+			director = random.choice(directors)
+			trucks_num = list(Truck.objects.filter(avaiable="Woln"))
+			truck_num = random.choice(trucks_num)
+			semi_trailer = get_object_or_404(
+				SemiTrailer, registration_number=information.get('semi_trailer'))
+			date_today = str(datetime.datetime.today()).split(" ")[0]
+			if information.get('truck') is True:
+				information['truck'] = truck_num.pk
+			else:
+				information['truck'] = None
+			information['data_created'] = date_today
+			information['user'] = request.user.pk
+			information['sender'] = director.pk
+			information['semi_trailer'] = semi_trailer.pk
+			serializer = serializers.VehicleReceivmentSerializer(data=information)
+			if serializer.is_valid():
+				if information['truck'] is None:
+					information['truck'] = None
+				else:
+					information['truck'] = truck_num
+				information['semi_trailer'] = semi_trailer
+				information['user'] = request.user
+				information['sender'] = director
+				try:
+					receivment = serializer.create(information)
+					receivment.save()
+					return Response(serializer.data, status=status.HTTP_201_CREATED)
+				except IntegrityError as e:
+					return Response({"error":"Something bad with data or duplication"}, status=status.HTTP_409_CONFLICT)
+			return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		except Exception as e:
+			return Response({"error":str(e)}, status=status.HTTP_424_FAILED_DEPENDENCY)
+
+class VehicleStatement(APIView):
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
+
+	def get(self, request):
+		return Response(status=status.HTTP_200_OK)
+
+	def post(self, request):
+		user = request.user
+		information = request.data
+		try:
+			date_today = str(datetime.datetime.today()).split(" ")[0]
+			directors = AppUser.active_users.today_active_directors()
+			print(directors)
+			director = random.choice(directors)
+			receivment_back = VehicleReceivment.objects.get(
+				user=user,
+				data_ended=None
+			)
+			print('esa')
+			receivment_back.data_ended = datetime.datetime.now()
+			receivment_back.save()
+			truck = receivment_back.truck
+			semi_trailer = receivment_back.semi_trailer
+			information['data_created'] = date_today
+			information['data_ended'] = date_today
+			information['truck'] = truck.pk
+			information['semi_trailer'] = semi_trailer.pk
+			information['sender'] = user.pk
+			information['user'] = director.pk
+			serializer = serializers.VehicleReceivmentSerializer(data=information)
+			if serializer.is_valid():
+				information['truck'] = truck
+				information['semi_trailer'] = semi_trailer
+				information['sender'] = user
+				information['user'] = director
+				print("test 1 test 2")
+				serializer.finish_action(information)
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
-			except IntegrityError as e:
-				return Response({"error":"Something bad with data or duplication"}, status=status.HTTP_409_CONFLICT)
-		return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			else:
+				return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+		except Exception as e:
+			return Response({"error":str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class VehicleReceivmentDetail(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
