@@ -1,5 +1,4 @@
 import random
-
 from django.contrib.auth import login, logout
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
@@ -17,7 +16,8 @@ from .models import (
 					VehicleReceivment,
 					TruckComplainPhoto,
 					SemiTrailerComplainPhoto,
-					AppUser)
+					AppUser,
+					FaultReportPhoto)
 import datetime
 from django.contrib.auth import get_user_model
 '''
@@ -41,7 +41,7 @@ class UserRegister(APIView):
 class UserLogin(APIView):
 	permission_classes = (permissions.AllowAny,)
 	authentication_classes = (SessionAuthentication,)
-	##
+
 	def post(self, request):
 		data = request.data
 		serializer = serializers.UserLoginSerializer(data=data)
@@ -54,6 +54,7 @@ class UserLogin(APIView):
 class UserLogout(APIView):
 	permission_classes = (permissions.AllowAny,)
 	authentication_classes = ()
+
 	def post(self, request):
 		print(request.data)
 		logout(request)
@@ -63,10 +64,36 @@ class UserLogout(APIView):
 class UserView(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
 	authentication_classes = (SessionAuthentication,)
-	##
+
 	def get(self, request):
 		serializer = serializers.UserSerializer(request.user)
 		return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+
+class UsersView(APIView):
+	permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
+	authentication_classes = (SessionAuthentication,)
+
+	def get(self, request):
+		queryset = AppUser.objects.all()
+		serializer = serializers.UserSerializer(queryset, many=True)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserDelete(APIView):
+	permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
+	authentication_classes = (SessionAuthentication,)
+
+	def post(self, request, pk):
+		print(request)
+		try:
+			user = AppUser.objects.get(pk=pk)
+			user.delete()
+			return Response(status=status.HTTP_200_OK)
+		except user.DoesNotExist:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 """
 	Vehickles part -- 
 """
@@ -78,7 +105,6 @@ class TruckView(APIView):
 		queryset = Truck.objects.all()
 		serializer = serializers.TruckSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class TruckDetail(APIView):
@@ -204,7 +230,8 @@ class VehicleReceivments(APIView):
 	authentication_classes = (SessionAuthentication,)
 
 	def get(self, request):
-		queryset = VehicleReceivment.objects.all()
+		queryset = VehicleReceivment.objects.filter(
+			user=request.user, data_ended=None)
 		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -314,9 +341,34 @@ class VehicleReceivmentDetail(APIView):
 
 	def post(self, request, pk):
 		try:
+			information = request.data
+			information['complain'] = 'A'
+			description = information.get('description')
+			print(description)
+			photos = request.FILES.getlist('photo')
 			queryset = VehicleReceivment.objects.get(pk=pk)
+			queryset.story = description
+			if queryset.story and queryset.complain is "A":
+				pass
+			truck = queryset.truck
+			truck.avaiable = 'Awar'
+			truck.save()
+			semi_trailer = queryset.semi_trailer
+			semi_trailer.avaiable = 'Awar'
+			semi_trailer.save()
 			serializer = serializers.VehicleReceivmentSerializer(queryset)
-			serializer.update_complain_state(queryset, request.data)
+			serializer.update_complain_state(queryset, information)
+			for photo in photos:
+				context = {
+					'receivment': queryset.pk,
+					'photo': photo
+				}
+				fault_serializer = serializers.FaultReportSerializer(data=context)
+				if fault_serializer.is_valid():
+					context['receivment'] = queryset
+					fault_serializer.create(context)
+					fault_serializer.save()
+					return Response(fault_serializer.data, status=status.HTTP_201_CREATED)
 			return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 		except Exception as e:
 			return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -526,7 +578,17 @@ class ReceivmentsApproval(APIView):
 
 	def post(self, request): pass
 
+class FaultsReports(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
 
+	def get(self, request):
+		queryset = FaultReportPhoto.objects.all()
+		serializer = serializers.FaultReportSerializer(queryset, many=True)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+
+	def post(self, request):
+		pass
 """
 	tworzymy odbior dla naszego kierowcy -
 	Mamy można tak powiedziecx chyba dwie opcje

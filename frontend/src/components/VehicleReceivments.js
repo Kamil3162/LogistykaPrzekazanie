@@ -14,6 +14,14 @@ const handleButtonClick = () => {
         console.log(response);
     });
 };
+const handleFaultClick = () =>{
+    const url = 'api/faults';
+    client.post(url, {
+    }).then(response => {
+        console.log(response);
+    })
+}
+
 function VehicleReceivmentList() {
   const [vehicleReceivments, setVehicleReceivments] = useState([]);
 
@@ -44,6 +52,7 @@ function VehicleReceivmentList() {
         </div>
       ))}
     <button onClick={handleButtonClick}>Zdaj Pojazdy</button>
+    <button onClick={handleFaultClick}>Zglos awarie</button>
     </div>
   );
 }

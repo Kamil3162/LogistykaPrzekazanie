@@ -12,7 +12,9 @@ import SemiTrailerPhotoReceivment from "./components/SemiTrailerPhotoReceivment"
 import EquipmentTruckReport from "./components/EquipmentTruckReport";
 import EquipmentSemitruckReport from './components/EquipmentSemitruckReport';
 import VehicleReceivment from "./components/VehicleReceivment";
-
+import FaultReport from "./components/FaultReport";
+import Users from "./components/Users";
+import Register from "./components/Register";
 /*
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -48,17 +50,31 @@ function App() {
           <a href="/vehicle-receivments/add">
               Make a receivment
           </a>
-
+          <br/>
+          <a href="/report/fault">
+             Report fault
+          </a>
+          <br/>
+          <a href="/users">
+             users Display
+          </a>
+          <br/>
+          <a href="/register">
+             Register
+          </a>
           <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/user" element={<User/>}/>
+            <Route path="/register" element={<Register/>}/>
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
             <Route path="/vehicle-receivments/add" element={<VehicleReceivment/>}/>
             <Route path="/report/receivment" element={<TruckPhotoReceivment/>}/>
             <Route path="/report/receivment/semitrailer" element={<SemiTrailerPhotoReceivment/>}/>
             <Route path="/report/receivment/truck/equipment" element={<EquipmentTruckReport/>}/>
             <Route path="/report/receivment/semitruck/equipment" element={<EquipmentSemitruckReport/>}/>
+            <Route path="/report/fault" element={<FaultReport/>}/>
+            <Route path="/users" element={<Users/>}/>
           </Routes>
       </div>
   );

@@ -9,7 +9,8 @@ from .models import (
     SemiTrailerEquipment,
     VehicleReceivment,
     TruckComplainPhoto,
-    SemiTrailerComplainPhoto
+    SemiTrailerComplainPhoto,
+    FaultReportPhoto
 )
 CustomUser = get_user_model()
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -206,4 +207,13 @@ class SemiTrailerComplainSerializer(serializers.ModelSerializer):
             semitrailer_photo=validated_data.get('semitrailer_photo'))
         return complain_photo
 
+class FaultReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FaultReportPhoto
+        fields = '__all__'
 
+    def create(self, validated_data):
+        fault_photo = FaultReportPhoto.objects.create(
+            receivment=validated_data.get('receivment'),
+            photo=validated_data.get('photo'))
+        return fault_photo

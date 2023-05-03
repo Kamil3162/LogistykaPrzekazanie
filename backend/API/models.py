@@ -234,6 +234,7 @@ class VehicleReceivment(models.Model):
         default=None
     )
     complain = models.CharField(max_length=1, choices=COMPLAIN, default='N')
+    story = models.CharField(max_length=300, blank=True)
 
     def __str__(self):
         return f"Receivment {self.truck.brand}"
@@ -245,6 +246,11 @@ class TruckComplainPhoto(models.Model):
                                    blank=False)
     truck_photo = models.ImageField(upload_to='media', blank=False)
 
+class FaultReportPhoto(models.Model):
+    receivment = models.ForeignKey(VehicleReceivment,
+                                   on_delete=models.CASCADE,
+                                   blank=False)
+    photo = models.ImageField(upload_to='media', blank=False)
 
 class SemiTrailerComplainPhoto(models.Model):
     receivment = models.ForeignKey(VehicleReceivment,
