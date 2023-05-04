@@ -65,9 +65,26 @@ class UserView(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
 	authentication_classes = (SessionAuthentication,)
 
-	def get(self, request):
-		serializer = serializers.UserSerializer(request.user)
+	def get(self, request, pk):
+		queryset = AppUser.objects.get(pk=pk)
+		serializer = serializers.UserSerializer(queryset)
 		return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+
+	def post(self, request, pk):
+		try:
+			information = request.data
+			user = AppUser.objects.get(pk=pk)
+			serializer = serializers.UserSerializer(data=information)
+			if serializer.is_valid():
+				serializer.update(user, information)
+				serializer.save()
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except user.DoesNotExist:
+			return Response({"error": "this user doesn't exists"},
+							status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({"error": str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UsersView(APIView):
 	permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
@@ -78,6 +95,19 @@ class UsersView(APIView):
 		serializer = serializers.UserSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
+	def post(self, request, pk):
+		try:
+			information = request.data
+			user = AppUser.objects.get(pk=pk)
+			serializer = serializers.UserSerializer(data=information)
+			serializer.update(user, information)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except user.DoesNotExist:
+			return Response({"error": "this user doesn't exists"},
+							status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({"error": str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UserDelete(APIView):
 	permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
@@ -106,6 +136,9 @@ class TruckView(APIView):
 		serializer = serializers.TruckSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
+	# TODO - metoda do modyfikacji trucks
+	def post(self, request, pk):
+		pass
 
 class TruckDetail(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
@@ -115,9 +148,30 @@ class TruckDetail(APIView):
 		try:
 			queryset = Truck.objects.get(pk=pk)
 		except Truck.DoesNotExist:
-			return Response({'error': 'Truck not found'}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'error': 'Truck not found'},
+							status=status.HTTP_404_NOT_FOUND)
 		serializer = serializers.TruckSerializer(queryset)
 		return Response(serializer.data)
+
+	def post(self, request, pk):
+		try:
+			queryset = Truck.objects.get(pk=pk)
+			receivment = VehicleReceivment.objects.get(
+				truck=queryset, data_ended=None)
+			return Response({"error":"cant delete this truck"},
+							status=status.HTTP_400_BAD_REQUEST)
+		except Truck.DoesNotExist:
+			return Response({'error': 'Truck not found'},
+							status=status.HTTP_404_NOT_FOUND)
+		except VehicleReceivment.DoesNotExist:
+			queryset = Truck.objects.get(pk=pk)
+			queryset.delete()
+			return Response({'error': 'Receivment not exist'},
+							status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({"error":str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class TruckAdd(APIView):
 	"""
@@ -136,6 +190,8 @@ class TruckAdd(APIView):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# TODO here is Truck Detail
+'''
 class TruckDelete(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
 	authentication_classes = (SessionAuthentication,)
@@ -150,7 +206,7 @@ class TruckDelete(APIView):
 				return Response({'error': 'Truck not exist'}, status=status.HTTP_404_NOT_FOUND)
 			serializer.__delete__(truck)
 			return Response(status=status.HTTP_204_NO_CONTENT)
-
+'''
 
 class SamiTrucksView(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
@@ -164,6 +220,11 @@ class SamiTrucksView(APIView):
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except TypeError:
 			return Response(status=status.HTTP_404_NOT_FOUND)
+
+	# TODO - modyfikacja naczepy
+	def post(self, request, pk):
+		pass
+
 
 class SamiTrucksAdd(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
@@ -198,6 +259,25 @@ class SamiTrucksDetailView(APIView):
 		except queryset.DoesNotExist:
 			return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
+	def post(self, request, pk):
+		try:
+			queryset = SemiTrailer.objects.get(pk=pk)
+			receivment = VehicleReceivment.objects.get(
+				semi_trailer=queryset, data_ended=None)
+			return Response({"error": "cant delete this truck"},
+							status=status.HTTP_400_BAD_REQUEST)
+		except SemiTrailer.DoesNotExist:
+			return Response({'error': 'SemiTrailer not found'},
+							status=status.HTTP_404_NOT_FOUND)
+		except VehicleReceivment.DoesNotExist:
+			queryset = SemiTrailer.objects.get(pk=pk)
+			queryset.delete()
+			return Response({'error': 'Receivment not exist'},
+							status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({"error": str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class TruckEquimpmentView(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
 	authentication_classes = (SessionAuthentication,)
@@ -230,8 +310,13 @@ class VehicleReceivments(APIView):
 	authentication_classes = (SessionAuthentication,)
 
 	def get(self, request):
-		queryset = VehicleReceivment.objects.filter(
-			user=request.user, data_ended=None)
+		user = request.user
+		queryset = None
+		if user.is_staff == 1 and user.is_superuser == 1:
+			queryset = VehicleReceivment.objects.all()
+		else:
+			queryset = VehicleReceivment.objects.filter(
+				user=request.user, data_ended=None)
 		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -445,7 +530,6 @@ class ReceivmentSemiTrailerComplain(APIView):
 			return Response({"error": str(e)},
 							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class EquipmentTruckReceivementReport(APIView):
 	authentication_classes = (SessionAuthentication,)
 	permission_classes = (permissions.IsAuthenticated,)
@@ -501,7 +585,6 @@ class EquipmentTruckReceivementReport(APIView):
 			else:
 				return Response(serializer.errors,
 								status=status.HTTP_406_NOT_ACCEPTABLE)
-
 
 class EquipmentSemiTrailerReceivmentReport(APIView):
 	authentication_classes = (SessionAuthentication,)
@@ -567,16 +650,6 @@ class ActiveReceivment(APIView):
 		except VehicleReceivment.DoesNotExist:
 			return Response({"error":"You havent active Recivments"},
 							status=status.HTTP_200_OK)
-
-class ReceivmentsApproval(APIView):
-	authentication_classes = (SessionAuthentication,)
-	permission_classes = (permissions.IsAuthenticated,)
-
-	def get(self, request):
-		user = request.user
-		pass
-
-	def post(self, request): pass
 
 class FaultsReports(APIView):
 	authentication_classes = (SessionAuthentication,)

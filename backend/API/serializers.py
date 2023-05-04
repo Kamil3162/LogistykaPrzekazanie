@@ -38,7 +38,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
-
+    def update(self, instance, validated_data):
+        instance.surname = validated_data.get('surname', instance.surname)
+        instance.city = validated_data.get('city', instance.city)
+        instance.region = validated_data.get('region', instance.region)
+        instance.email = validated_data.get('email', instance.email)
+        instance.zip_code = validated_data.get('zip_code', instance.zip_code)
+        instance.mobile_phone = validated_data.get('zip_code', instance.zip_code)
+        instance.username = validated_data.get('username', instance.username)
+        instance.is_staff = validated_data.get('staff', instance.is_staff)
+        instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
+        instance.is_admin = validated_data.get('is_admin', instance.is_admin)
+        instance.save()
+        return instance
 """
     Trucks Serializers
 """

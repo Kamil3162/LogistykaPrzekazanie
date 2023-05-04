@@ -46,7 +46,7 @@ const VehicleReceivmentForm = () => {
         handleComplainChecker();
     }).catch (error => {
         console.log(error.response);
-        alert("Prawdopodobnie twoje zlecenie jeszcze nie zostało skonczone")
+        alert("Prawdopodobnie twoje zlecenie jeszcze nie zostało skonczone lub samochody albo naczepy są zajete")
     });
   };
 

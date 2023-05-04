@@ -109,6 +109,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
                                     validators=[mobile_address_valid],
                                     unique=False, blank=True)
     username = models.CharField(max_length=50, blank=True)
+    own_truck = models.CharField(max_length=20, blank=True)
 
     is_superuser = models.BooleanField(default=False, blank=False)
     is_staff = models.BooleanField(default=False, blank=False)
@@ -235,6 +236,7 @@ class VehicleReceivment(models.Model):
     )
     complain = models.CharField(max_length=1, choices=COMPLAIN, default='N')
     story = models.CharField(max_length=300, blank=True)
+    # target - add
 
     def __str__(self):
         return f"Receivment {self.truck.brand}"

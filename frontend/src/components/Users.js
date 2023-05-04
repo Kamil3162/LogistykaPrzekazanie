@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
 const baseURL = "http://127.0.0.1:8000/";
 
 const client = axios.create({
@@ -43,8 +43,10 @@ function VehicleReceivmentList() {
           <p>Created: {users.region}</p>
           <p>Ended: {users.email}</p>
           <p>User: {users.zip_code}</p>
-          <button name="modify" onClick={() => handleDelete(users.id)}>Delete</button>
-          <button name="delete">Modify</button>
+          <button name="delete" onClick={() => handleDelete(users.id)}>Delete</button>
+          <Link to={`/user/${users.id}`}>
+            <button name="modify">Modify</button>
+          </Link>
           <h1>--------------</h1>
         </div>
       ))}
