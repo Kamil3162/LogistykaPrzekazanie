@@ -52,6 +52,7 @@ const VehicleReceivmentForm = () => {
 
   return (
       <div>
+
           <div>
               Data-
               {semi_trailers.map(semitrailer => (

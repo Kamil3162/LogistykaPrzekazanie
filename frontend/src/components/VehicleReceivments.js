@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import GoogleMapReact from 'google-map-react';
+
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
@@ -38,8 +41,27 @@ function VehicleReceivmentList() {
       });
   }, []);
 
+  function initMap(lat, lng) {
+    const map = new window.google.maps.Map(document.getElementById("map"), {
+      center: { lat, lng },
+      zoom: 8,
+    });
+  }
   return (
     <div>
+        <div style={{ height: '100vh', width: '100%' }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: 'AIzaSyCWmcyn5J6-sHAIEupkWpVHDJ4-g-_0NOM' }}
+            defaultCenter={{ lat: 52.520008, lng: 13.404954 }}
+            defaultZoom={8}
+          >
+            <AnyReactComponent
+              lat={59.955413}
+              lng={30.337844}
+              text="My Marker"
+            />
+          </GoogleMapReact>
+        </div>
       {vehicleReceivments.map(vehicleReceivment => (
         <div key={vehicleReceivment.id}>
           <p>Truck: {vehicleReceivment.truck}</p>

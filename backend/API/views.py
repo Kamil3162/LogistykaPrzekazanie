@@ -1,3 +1,4 @@
+import requests
 import random
 from django.contrib.auth import login, logout
 from rest_framework.authentication import SessionAuthentication
@@ -350,6 +351,8 @@ class VehicleReceivments(APIView):
 			queryset = VehicleReceivment.objects.filter(
 				user=request.user, data_ended=None)
 		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
+		print(serializer)
+		print(serializer.data)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
@@ -364,10 +367,12 @@ class VehicleReceivments(APIView):
 		information = request.data
 		print(information.get('truck'))
 		print(information.get('semi_trailer'))
+
 		try:
 			directors = AppUser.active_users.today_active_directors()
 			director = random.choice(directors)
-			trucks_num = list(Truck.objects.filter(avaiable="Woln"))
+			trucks_num = list(Truck.objects.filter(avaiable="Wol"))
+			print(trucks_num)
 			truck_num = random.choice(trucks_num)
 			semi_trailer = get_object_or_404(
 				SemiTrailer, registration_number=information.get('semi_trailer'))
@@ -452,6 +457,7 @@ class VehicleReceivmentDetail(APIView):
 		try:
 			queryset = VehicleReceivment.objects.get(pk=pk)
 			serializer = serializers.VehicleReceivmentSerializer(queryset)
+
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
 			return Response({'error':str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
