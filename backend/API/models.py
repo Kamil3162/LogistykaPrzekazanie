@@ -220,6 +220,7 @@ class VehicleReceivment(models.Model):
                                      blank=False)
     data_created = models.DateField(auto_created=True)
     data_ended = models.DateField(blank=True, null=True)
+    target_address = models.CharField(max_length=200, blank=True)
     user = models.ForeignKey(  # someone who
         AppUser,
         on_delete=models.CASCADE,

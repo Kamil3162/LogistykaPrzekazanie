@@ -17,6 +17,7 @@ import UserDetail from "./components/UserDetail";
 import Trucks from "./components/Trucks";
 import TruckDetail from "./components/TruckDetail";
 import SamiTrucks from "./components/Samitrucks";
+import SemituckDetail from "./components/SemituckDetail";
 function App() {
   return (
       <div>
@@ -55,16 +56,19 @@ function App() {
               <li>
                 <Link to="/trucks">Trucks</Link>
               </li>
+              <li>
+                <Link to="/sami-trucks/">Samitrucks</Link>
+              </li>
             </ul>
           </nav>
           <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/user" element={<User/>}/>
-            <Route path="/truck/:pk" element={<TruckDetail/>}/>
             <Route path="/trucks" element={<Trucks/>}/>
-            <Route path="/sami-truck/:pk" element={<User/>}/>
-            <Route path="/sami-trucks/" element={<User/>}/>
+            <Route path="/truck/:pk" element={<TruckDetail/>}/>
+            <Route path="/sami-trucks/" element={<SamiTrucks/>}/>
+            <Route path="/sami-truck/:pk" element={<SemituckDetail/>}/>
             <Route path="/user/:pk" element={<UserDetail />} />
             <Route path="/register" element={<Register/>}/>
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>

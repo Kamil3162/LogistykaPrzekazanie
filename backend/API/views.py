@@ -138,7 +138,22 @@ class TruckView(APIView):
 
 	# TODO - metoda do modyfikacji trucks
 	def post(self, request, pk):
-		pass
+		try:
+			information = request.data
+			print(information)
+			truck = Truck.objects.get(pk=pk)
+			serializer = serializers.TruckSerializerAdd(data=information)
+			if serializer.is_valid():
+				serializer.update(truck, information)
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			else:
+				return Response(serializer.errors,
+								status=status.HTTP_404_NOT_FOUND)
+		except Truck.DoesNotExist:
+			return Response({"error":"Following model doesnt exist"},
+							status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TruckDetail(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
@@ -223,7 +238,24 @@ class SamiTrucksView(APIView):
 
 	# TODO - modyfikacja naczepy
 	def post(self, request, pk):
-		pass
+		try:
+			information = request.data
+			print(information)
+			samitruck = SemiTrailer.objects.get(pk=pk)
+			print(samitruck)
+			serializer = serializers.SemiTrailerSerializer(data=information)
+			if serializer.is_valid():
+				serializer.update(samitruck, information)
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			else:
+				return Response(serializer.errors,
+								status=status.HTTP_404_NOT_FOUND)
+		except Truck.DoesNotExist:
+			return Response({"error": "Following model doesnt exist"},
+							status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"error": str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class SamiTrucksAdd(APIView):
@@ -433,7 +465,7 @@ class VehicleReceivmentDetail(APIView):
 			photos = request.FILES.getlist('photo')
 			queryset = VehicleReceivment.objects.get(pk=pk)
 			queryset.story = description
-			if queryset.story and queryset.complain is "A":
+			if queryset.story and queryset.complain == "A":
 				pass
 			truck = queryset.truck
 			truck.avaiable = 'Awar'

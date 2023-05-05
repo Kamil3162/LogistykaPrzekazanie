@@ -15,19 +15,17 @@ function MyModelDetail() {
   const formData = new FormData();
   const [brand, setName] = useState('');
   const [model, setModel] = useState('');
-  const [power, setPower] = useState('');
+  const [production_year, setproduction_year] = useState('');
   const [registration_number, setRegistration_number] = useState('');
+  const [seminote, setSeminote] = useState('');
   const [avaiable, setAvaiable] = useState('');
-  const [driven_length, setdriven_length] = useState('');
-  const [production_date, setproduction_date] = useState('');
 
   useEffect(() => {
-    client.get(`api/truck/${pk}`)
+    client.get(`api/samitruck/${pk}`)
         .then(response =>{
             setMyModel(response.data)
             console.log(response.data);
-            setproduction_date(response.data.production_date);
-            setdriven_length(response.data.driven_length)
+            setproduction_year(response.data.production_year);
         })
         .catch(error => {
             console.log(error);
@@ -37,18 +35,16 @@ function MyModelDetail() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    client.post(`api/truck/modify/${pk}`, {
+    client.post(`api/samitruck/modify/${pk}`, {
       brand,
       model,
-      power,
       registration_number,
       avaiable,
-      driven_length,
-      production_date
+      production_year
     })
       .then(response => {
         console.log(response.data);
-        alert("zmieniono dane Ciezarówki");
+        alert("zmieniono dane Naczepy");
       })
       .catch(error => {
         console.log(error);
@@ -61,11 +57,9 @@ function MyModelDetail() {
         <div>
           <p>Brand: {myModel.brand}</p>
           <p>Model: {myModel.model}</p>
-          <p>Power: {myModel.power}</p>
+          <p>production Data: {myModel.production_year}</p>
           <p>Registration Number: {myModel.registration_number}</p>
-          <p>Driven Kms: {myModel.driven_length} km</p>
-          <p>production Data: {myModel.production_date}</p>
-          <p>State: {myModel.avaiable}</p>
+          <p>State: {myModel.avaiable ? 'Obecny':'Nieobecny'}</p>
         </div>
       )}
         <form onSubmit={handleSubmit}>
@@ -80,19 +74,21 @@ function MyModelDetail() {
               </label>
               <br />
               <label>
-                Power:
-                <input type="number" value={power} onChange={(e) => setPower(e.target.value)} required />
-              </label>
-              <br />
-              <label>
                 Registration number:
                 <input type="text" value={registration_number} onChange={(e) => setRegistration_number(e.target.value)} required />
               </label>
+              <br/>
+               Zeszyt:
+               <select value={seminote} onChange={(e) => setSeminote(e.target.value)} required>
+                    <option value="">Wybierz:</option>
+                    <option value="true">Jest</option>
+                    <option value="false">Brak</option>
+              </select>
               <br />
               <label>
                 Avaiable:
                <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)} required>
-                    <option value="">--Select an option--</option>
+                    <option value="">Wybierz:</option>
                     <option value="Wol">Wolny</option>
                     <option value="Zaj">Zajęty</option>
                     <option value="Awar">Awaria</option>

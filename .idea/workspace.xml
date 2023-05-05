@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0f9377a3-6c79-4a36-94a7-555ad6569b55" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
-    </list>
+    <list default="true" id="0f9377a3-6c79-4a36-94a7-555ad6569b55" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/frontend" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="2OWXQyB6TRVV1inR3iC8UP6lQck" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -25,7 +21,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/kamil/PycharmProjects/LogistykaLogowanie/LogistykaFIx",
+    "last_opened_file_path": "C:/Users/kamil/OneDrive/Pulpit/Logistyka/LogistykaPrzekazanie",
     "nodejs_package_manager_path": "npm"
   }
 }]]></component>
@@ -63,6 +59,7 @@
       <option name="presentableId" value="Default" />
       <updated>1681677300217</updated>
       <workItem from="1681677302209" duration="25000" />
+      <workItem from="1683267743706" duration="63000" />
     </task>
     <servers />
   </component>

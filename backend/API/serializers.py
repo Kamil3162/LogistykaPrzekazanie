@@ -83,10 +83,14 @@ class TruckSerializerAdd(serializers.ModelSerializer):
         instance.brand = validated_data.get('brand', instance.brand)
         instance.model = validated_data.get('model', instance.model)
         instance.power = validated_data.get('power', instance.power)
-        instance.registration_number = validated_data.get('registration_number', instance.registration_number)
-        instance.driven_length = validated_data.get('driven_length', instance.driven_length)
-        instance.production_date = validated_data.get('production_date', instance.production_date)
-        instance.available = validated_data.get('available', instance.available)
+        instance.registration_number = validated_data.get(
+            'registration_number',
+             instance.registration_number)
+        instance.driven_length = validated_data.get('driven_length',
+                                                    instance.driven_length)
+        instance.production_date = validated_data.get('production_date',
+                                                      instance.production_date)
+        instance.avaiable = validated_data.get('avaiable', instance.avaiable)
         instance.save()
         return instance
 

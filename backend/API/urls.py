@@ -20,6 +20,7 @@ urlpatterns = [
     path('samitruck/add', views.SamiTrucksAdd.as_view()),
     path('samitruck/<int:pk>', views.SamiTrucksDetailView.as_view()),
     path('samitruck/modify/<int:pk>', views.SamiTrucksView.as_view()),
+    path('samitruck-del/<int:pk>', views.SamiTrucksDetailView.as_view()),
     path('samitrucks-equip', views.SamiTrucksView.as_view()),
     path('trucks-equip', views.TruckEquimpmentView.as_view()),
     path('vehicle-receivements', views.VehicleReceivments.as_view()),
