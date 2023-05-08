@@ -16,9 +16,39 @@ import Register from "./components/Register";
 import UserDetail from "./components/UserDetail";
 import Trucks from "./components/Trucks";
 import TruckDetail from "./components/TruckDetail";
-import SamiTrucks from "./components/Samitrucks";
+import SamiTrucks from "./components/TruckAdd";
 import SemituckDetail from "./components/SemituckDetail";
+import Faults from "./components/Faults";
+import FaultsDetail from "./components/FaultsDetail";
+import AllVehicleReceivments from "./components/AllVehicleReceivments";
+import SemiTruckAdd1 from "./components/SemiTruckAdd1";
+import TruckAdd1 from "./components/TruckAdd1";
+import axios from "axios";
 function App() {
+  const client = axios.create({
+    baseURL: "http://127.0.0.1:8000/"
+  });
+  client.defaults.xsrfCookieName = 'csrftoken';
+  client.defaults.xsrfHeaderName = 'X-CSRFToken';
+  client.defaults.withCredentials = true;
+
+  const [currentUser, setCurrentUser] = useState({});
+  const [isAdmin, setisAdmin] = useState(false);
+  const fetchUser = () =>{
+    client.get('/api/user', {
+    })
+    .then(response => {
+      setCurrentUser(response.data);
+      setisAdmin(response.data.is_admin);
+      console.log(isAdmin);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+  useEffect(() => {
+    fetchUser()
+  }, [])
   return (
       <div>
           <nav>
@@ -39,38 +69,59 @@ function App() {
                 <Link to="/vehicle-receivments">Your current Vehicle Receivments</Link>
               </li>
               <li>
-                <Link to="/report/receivment/truck/equipment">Truck Equipment</Link>
+                  <Link to="/vehicle-receivments/add">Make a receivment</Link>
               </li>
-              <li>
-                <Link to="/vehicle-receivments/add">Make a receivment</Link>
-              </li>
-              <li>
-                <Link to="/report/fault">Report fault</Link>
-              </li>
-              <li>
-                <Link to="/users">Users Display</Link>
-              </li>
-              <li>
-                <Link to="/register">Register</Link>
-              </li>
-              <li>
-                <Link to="/trucks">Trucks</Link>
-              </li>
-              <li>
-                <Link to="/sami-trucks/">Samitrucks</Link>
-              </li>
+              {isAdmin ? (
+                  <>
+                     <li>
+                      <Link to="/report/receivment/truck/equipment">Truck Equipment</Link>
+                    </li>
+                    <li>
+                      <Link to="/report/fault">Report fault</Link>
+                    </li>
+                    <li>
+                      <Link to="/users">Users Display</Link>
+                    </li>
+                    <li>
+                      <Link to="/register">Register</Link>
+                    </li>
+                    <li>
+                      <Link to="/trucks">Trucks</Link>
+                    </li>
+                    <li>
+                      <Link to="/trucks/add">Add Trucks</Link>
+                    </li>
+                    <li>
+                      <Link to="/sami-trucks/">Samitrucks</Link>
+                    </li>
+                    <li>
+                      <Link to="/sami-trucks/add">Samitrucks Add</Link>
+                    </li>
+                    <li>
+                      <Link to="/faults">Faults</Link>
+                    </li>
+                     <li>
+                      <Link to="/vehicle-receivments/all">Receivments Complain</Link>
+                    </li>
+
+                  </>
+              ): null}
             </ul>
           </nav>
           <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
             <Route path="/user" element={<User/>}/>
-            <Route path="/trucks" element={<Trucks/>}/>
-            <Route path="/truck/:pk" element={<TruckDetail/>}/>
-            <Route path="/sami-trucks/" element={<SamiTrucks/>}/>
-            <Route path="/sami-truck/:pk" element={<SemituckDetail/>}/>
+            {isAdmin &&<Route path="/trucks" element={<Trucks/>}/>}
+            {isAdmin &&<Route path="/trucks/add" element={<SemiTruckAdd1/>}/>}
+            {isAdmin &&<Route path="/truck/:pk" element={<TruckDetail/>}/>}
+            {isAdmin &&<Route path="/sami-trucks/" element={<SamiTrucks/>}/>}
+            {isAdmin &&<Route path="/sami-trucks/add" element={<TruckAdd1/>}/>}
+            {isAdmin &&<Route path="/sami-truck/:pk" element={<SemituckDetail/>}/>}
             <Route path="/user/:pk" element={<UserDetail />} />
-            <Route path="/register" element={<Register/>}/>
+            {isAdmin && <Route path="/register" element={<Register/>}/>}
+            {isAdmin && <Route path="/faults" element={<Faults/>}/>}
+            {isAdmin && <Route path="/faults/:pk" element={<FaultsDetail/>}/>}
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
             <Route path="/vehicle-receivments/add" element={<VehicleReceivment/>}/>
             <Route path="/report/receivment" element={<TruckPhotoReceivment/>}/>
@@ -78,7 +129,9 @@ function App() {
             <Route path="/report/receivment/truck/equipment" element={<EquipmentTruckReport/>}/>
             <Route path="/report/receivment/semitruck/equipment" element={<EquipmentSemitruckReport/>}/>
             <Route path="/report/fault" element={<FaultReport/>}/>
-            <Route path="/users" element={<Users/>}/>
+            <Route path="/report/fault/:pk" element={<FaultsDetail/>}/>
+            <Route path="/vehicle-receivments/all" element={<AllVehicleReceivments/>}/>
+            {isAdmin && <Route path="/users" element={<Users/>}/>}
           </Routes>
       </div>
   );

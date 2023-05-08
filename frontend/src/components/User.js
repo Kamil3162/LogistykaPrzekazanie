@@ -15,8 +15,8 @@ function User(){
     })
     .then(response => {
       console.log("to jest data z usera")
-      console.log(response.data);
-      setCurrentUser(response.data.user);
+      console.log(response.data.is_admin);
+      setCurrentUser(response.data);
     })
     .catch(error => {
       console.error(error);
@@ -35,6 +35,7 @@ function User(){
           <p>{currentUser.username}</p>
           <p>{currentUser.email}</p>
           <p>{currentUser.region}</p>
+          <p>{currentUser.own_truck}</p>
       </div>
     )
 }

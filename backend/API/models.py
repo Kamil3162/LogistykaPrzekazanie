@@ -237,7 +237,6 @@ class VehicleReceivment(models.Model):
     )
     complain = models.CharField(max_length=1, choices=COMPLAIN, default='N')
     story = models.CharField(max_length=300, blank=True)
-    # target - add
 
     def __str__(self):
         return f"Receivment {self.truck.brand}"

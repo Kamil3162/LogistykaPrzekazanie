@@ -51,6 +51,18 @@ class UserLogin(APIView):
 			login(request, user)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 
+class CurrentUser(APIView):
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,)
+
+	def get(self, request):
+		try:
+			queryset = request.user
+			serializer = serializers.UserSerializer(request.user)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		pass
 
 class UserLogout(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -371,7 +383,7 @@ class VehicleReceivments(APIView):
 		try:
 			directors = AppUser.active_users.today_active_directors()
 			director = random.choice(directors)
-			trucks_num = list(Truck.objects.filter(avaiable="Wol"))
+			trucks_num = list(Truck.objects.filter(avaiable="Woln"))
 			print(trucks_num)
 			truck_num = random.choice(trucks_num)
 			semi_trailer = get_object_or_404(
@@ -690,16 +702,50 @@ class ActiveReceivment(APIView):
 							status=status.HTTP_200_OK)
 
 class FaultsReports(APIView):
-	authentication_classes = (SessionAuthentication,)
+	authentication_classes = (SessionAuthentication, )
 	permission_classes = (permissions.IsAuthenticated,)
 
 	def get(self, request):
-		queryset = FaultReportPhoto.objects.all()
-		serializer = serializers.FaultReportSerializer(queryset, many=True)
+		queryset = VehicleReceivment.objects.filter(complain='A')
+		serializer = serializers.VehicleReceivmentSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
 		pass
+
+class FaultReport(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request, pk):
+		try:
+			receivment = VehicleReceivment.objects.get(pk=pk)
+			print(receivment)
+			queryset = FaultReportPhoto.objects.filter(receivment=receivment)
+			print(queryset)
+			serializer = serializers.FaultReportSerializer(queryset, many=True)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({"error":str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+	def post(self, request):
+		pass
+
+class VehicleReceivmentsComplains(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request):
+		try:
+			queryset = VehicleReceivment.objects.filter(complain='T')
+			serializer = serializers.VehicleReceivmentSerializer(
+				queryset, many=True)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except Exception as e:
+			pass
+
+
 """
 	tworzymy odbior dla naszego kierowcy -
 	Mamy można tak powiedziecx chyba dwie opcje
