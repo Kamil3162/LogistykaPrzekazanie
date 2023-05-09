@@ -23,6 +23,10 @@ import FaultsDetail from "./components/FaultsDetail";
 import AllVehicleReceivments from "./components/AllVehicleReceivments";
 import SemiTruckAdd1 from "./components/SemiTruckAdd1";
 import TruckAdd1 from "./components/TruckAdd1";
+import VehicleReceivmentComplainDetail
+  from "./components/VehicleReceivmentComplainDetail";
+import ReceivmentModify from "./components/ReceivmentModify";
+
 import axios from "axios";
 function App() {
   const client = axios.create({
@@ -123,6 +127,7 @@ function App() {
             {isAdmin && <Route path="/faults" element={<Faults/>}/>}
             {isAdmin && <Route path="/faults/:pk" element={<FaultsDetail/>}/>}
             <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
+            <Route path="/vehicle-receivments/:pk" element={<ReceivmentModify/>}/>
             <Route path="/vehicle-receivments/add" element={<VehicleReceivment/>}/>
             <Route path="/report/receivment" element={<TruckPhotoReceivment/>}/>
             <Route path="/report/receivment/semitrailer" element={<SemiTrailerPhotoReceivment/>}/>
@@ -131,6 +136,7 @@ function App() {
             <Route path="/report/fault" element={<FaultReport/>}/>
             <Route path="/report/fault/:pk" element={<FaultsDetail/>}/>
             <Route path="/vehicle-receivments/all" element={<AllVehicleReceivments/>}/>
+            <Route path="/vehicle-receivments/complain/:pk" element={<VehicleReceivmentComplainDetail/>}/>
             {isAdmin && <Route path="/users" element={<Users/>}/>}
           </Routes>
       </div>

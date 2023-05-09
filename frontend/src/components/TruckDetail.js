@@ -13,7 +13,7 @@ function MyModelDetail() {
   const [myModel, setMyModel] = useState(null);
   const { pk } = useParams();
   const formData = new FormData();
-  const [brand, setName] = useState('');
+  const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [power, setPower] = useState('');
   const [registration_number, setRegistration_number] = useState('');
@@ -26,8 +26,11 @@ function MyModelDetail() {
         .then(response =>{
             setMyModel(response.data)
             console.log(response.data);
+            setBrand(response.data.brand);
+            setModel(response.data.model);
+            setPower(response.data.power);
             setproduction_date(response.data.production_date);
-            setdriven_length(response.data.driven_length)
+            setdriven_length(response.data.driven_length);
         })
         .catch(error => {
             console.log(error);
@@ -56,7 +59,7 @@ function MyModelDetail() {
   };
 
   return (
-    <div>
+     <div>
       {myModel && (
         <div>
           <p>Brand: {myModel.brand}</p>
@@ -68,38 +71,38 @@ function MyModelDetail() {
           <p>State: {myModel.avaiable}</p>
         </div>
       )}
-        <form onSubmit={handleSubmit}>
-              <label>
-              Brand:
-              <input type="text" value={brand} onChange={(e) => setName(e.target.value)} required />
-              </label>
-              <br />
-              <label>
-                Model:
-                <input type="text" value={model} onChange={(e) => setModel(e.target.value)} required />
-              </label>
-              <br />
-              <label>
-                Power:
-                <input type="number" value={power} onChange={(e) => setPower(e.target.value)} required />
-              </label>
-              <br />
-              <label>
-                Registration number:
-                <input type="text" value={registration_number} onChange={(e) => setRegistration_number(e.target.value)} required />
-              </label>
-              <br />
-              <label>
-                Avaiable:
-               <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)} required>
-                    <option value="">--Select an option--</option>
-                    <option value="Wol">Wolny</option>
-                    <option value="Zaj">Zajęty</option>
-                    <option value="Awar">Awaria</option>
-              </select>
-              </label>
-            <button type="submit">Apply</button>
-        </form>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Brand:
+          <input type="text" value={brand || ''} onChange={(e) => setBrand(e.target.value === '' ? null : e.target.value)} />
+        </label>
+        <br />
+        <label>
+          Model:
+          <input type="text" value={model || ''} onChange={(e) => setModel(e.target.value === '' ? null : e.target.value)} />
+        </label>
+        <br />
+        <label>
+          Power:
+          <input type="number" value={power || ''} onChange={(e) => setPower(e.target.value === '' ? null : Number(e.target.value))} />
+        </label>
+        <label>
+        Registration Number:
+        <input type="text" value={registration_number} onChange={(e) => setRegistration_number(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          Avaiable:
+          <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)}>
+            <option value="">--Select an option--</option>
+            <option value="Woln">Wolny</option>
+            <option value="Zaj">Zajęty</option>
+            <option value="Awar">Awaria</option>
+          </select>
+        </label>
+        <br />
+        <button type="submit">Apply</button>
+      </form>
     </div>
   );
 }

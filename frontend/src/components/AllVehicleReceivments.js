@@ -39,7 +39,7 @@ function VehicleReceivmentList() {
         <p>{vehicleReceivment.user}</p>
           <label>Complain:</label>
         <p>{vehicleReceivment.complain}</p>
-          <Link to={`/report/fault/${vehicleReceivment.id}`}>
+          <Link to={`/vehicle-receivments/complain/${vehicleReceivment.id}`}>
             <button name="modify">Pokaz</button>
           </Link>
       </div>

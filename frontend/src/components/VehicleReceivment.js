@@ -13,13 +13,15 @@ const VehicleReceivmentForm = () => {
   const [truck, setTruck] = useState("");
   const [semi_trailer, setSemi_trailer] = useState("");
   const [complain, setComplain] = useState("N");
+  const [target_address, setTarget_address] = useState("");
   const [semi_trailers, setSemiTrailers] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
   const data = {
       truck: truck,
       semi_trailer:semi_trailer,
-      complain: complain
+      complain: complain,
+      target_address:target_address
   };
   useEffect(() =>{
       client.get('api/samitrucks',{
@@ -64,9 +66,13 @@ const VehicleReceivmentForm = () => {
           <form onSubmit={handleSubmit}>
               <label htmlFor="truck">Truck:</label>
               <input type="checkbox" id="truck" checked={truck} onChange={(e) => setTruck(e.target.checked)} />
+              <br/>
               <label htmlFor="semi-trailer">Semi-trailer:</label>
               <input type="text" id="semi-trailer" value={semi_trailer} onChange={(e) => setSemi_trailer(e.target.value)} />
-
+              <br/>
+              <label htmlFor="semi-trailer">Target Address:</label>
+              <input type="text" id="semi-trailer" value={target_address} onChange={(e) => setTarget_address(e.target.value)} />
+                <br/>
               <label htmlFor="complain">Complain:</label>
               <select id="complain" value={complain} onChange={(e) => setComplain(e.target.value)}>
                 <option value="N">Nie</option>

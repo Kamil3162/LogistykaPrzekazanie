@@ -1,6 +1,7 @@
 import requests
 import random
 from django.contrib.auth import login, logout
+from django.http import JsonResponse
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -24,6 +25,14 @@ from django.contrib.auth import get_user_model
 '''
 	Login part - 
 '''
+
+class GetCookie(APIView):
+	authentication_classes = (SessionAuthentication,)
+
+	def get(self, request):
+		sessionid = request.COOKIES.get('sessionid')
+		return JsonResponse({'sessionid': sessionid})
+
 class UserRegister(APIView):
 	permission_classes = (permissions.AllowAny,)
 
@@ -358,7 +367,7 @@ class VehicleReceivments(APIView):
 		user = request.user
 		queryset = None
 		if user.is_staff == 1 and user.is_superuser == 1:
-			queryset = VehicleReceivment.objects.all()
+			queryset = VehicleReceivment.objects.filter(data_ended=None)
 		else:
 			queryset = VehicleReceivment.objects.filter(
 				user=request.user, data_ended=None)
@@ -444,6 +453,7 @@ class VehicleStatement(APIView):
 			information['data_ended'] = date_today
 			information['truck'] = truck.pk
 			information['semi_trailer'] = semi_trailer.pk
+			information['target_address'] = information['target_address']
 			information['sender'] = user.pk
 			information['user'] = director.pk
 			serializer = serializers.VehicleReceivmentSerializer(data=information)
@@ -513,8 +523,8 @@ class ReceivmentTruckComplain(APIView):
 	authentication_classes = (SessionAuthentication,)
 	parser_classes = [MultiPartParser, FormParser]
 
-	def get(self, request):
-		queryset = TruckComplainPhoto.objects.all()
+	def get(self, request, pk):
+		queryset = TruckComplainPhoto.objects.filter(receivment=pk)
 		serializer = serializers.TruckPhotoComplainSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -546,8 +556,8 @@ class ReceivmentSemiTrailerComplain(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
 	parser_classes = [MultiPartParser, FormParser]
 
-	def get(self, request):
-		queryset = SemiTrailerComplainPhoto.objects.all()
+	def get(self, request, pk):
+		queryset = SemiTrailerComplainPhoto.objects.filter(receivment=pk)
 		serializer = serializers.SemiTrailerComplainSerializer(queryset, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -744,7 +754,6 @@ class VehicleReceivmentsComplains(APIView):
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
 			pass
-
 
 """
 	tworzymy odbior dla naszego kierowcy -

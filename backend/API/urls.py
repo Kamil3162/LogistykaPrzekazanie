@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('cookie', views.GetCookie.as_view()),
     path('login', views.UserLogin.as_view()),
     path('logout', views.UserLogout.as_view()),
     path('register', views.UserRegister.as_view()),
@@ -31,9 +32,14 @@ urlpatterns = [
     path('vehicle-receivements/active', views.ActiveReceivment.as_view()),
     path('vehicle-receivements/<int:pk>',
          views.VehicleReceivmentDetail.as_view()),
+    path('vehicle-receivements/complain/add/<int:pk>',
+         views.ReceivmentTruckComplain.as_view()),
     path('vehicle-receivements/complain/add',
          views.ReceivmentTruckComplain.as_view()),
     path('vehicle-receivements/complain/semitruck/add',
+         views.ReceivmentSemiTrailerComplain.as_view(),
+         name='SemiTruckComplain'),
+    path('vehicle-receivements/complain/semitruck/add/<int:pk>',
          views.ReceivmentSemiTrailerComplain.as_view(),
          name='SemiTruckComplain'),
     path('vehicle-receivments/complain/equipment/semitrailer',

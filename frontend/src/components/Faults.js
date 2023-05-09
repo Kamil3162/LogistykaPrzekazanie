@@ -28,6 +28,7 @@ const FaultsDisplay = () => {
     <div>
         {receivments.map(receivment => (
         <Link to={`/faults/${receivment.id}`}>Wezwanie nr {receivment.id}</Link>
+
       ))}
     </div>
     );

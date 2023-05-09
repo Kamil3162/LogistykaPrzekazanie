@@ -22,6 +22,7 @@ export default function Login(){
                 }
             )
             if (response.status == 200){
+                console.log(response);
                 setEmial("");
                 setPassword("")
                 setMessage("U are log in");

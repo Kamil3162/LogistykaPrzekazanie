@@ -21,6 +21,7 @@ function VehicleReceivmentList() {
         .then(response =>{
             setTrucks(response.data);
             console.log(response.data);
+            console.log(response.data);
         })
         .catch(error => {
             console.log(error);
@@ -44,7 +45,7 @@ function VehicleReceivmentList() {
           <p>Complain: {truck.power}</p>
           <p>Created: {truck.registration_number}</p>
           <p>Ended: {truck.driven_length}</p>
-          <p>User: {truck.production_date}</p>
+          <p>Production: {truck.production_date}</p>
           <p>User: {truck.avaiable}</p>
           <button name="delete" onClick={() => handleDelete(truck.id)}>Delete</button>
           <Link to={`/truck/${truck.id}`}>

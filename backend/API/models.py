@@ -131,7 +131,7 @@ def registration_num_validator(reg_num):
 
 class Truck(models.Model):
     CHOICES = (
-        ('Wol', 'Wolny'),
+        ('Woln', 'Wolny'),
         ('Zaj', 'Zajety'),
         ('Awar', 'Awaria')
     )
@@ -147,7 +147,7 @@ class Truck(models.Model):
                                            unique=True)
     driven_length = models.IntegerField(blank=False)
     production_date = models.DateField(blank=False)
-    avaiable = models.CharField(choices=CHOICES, blank=False, max_length=4)
+    avaiable = models.CharField(choices=CHOICES, blank=False, max_length=4,default='Woln')
 
     def __str__(self):
         return self.registration_number
@@ -179,7 +179,7 @@ class SemiTrailer(models.Model):
                                            unique=True)
 
     semi_note = models.BooleanField(default=True, blank=False)
-    avaiable = models.CharField(max_length=4, choices=CHOICES, default='Wol',
+    avaiable = models.CharField(max_length=4, choices=CHOICES, default='Woln',
                                 blank=False)
 
     def __str__(self):

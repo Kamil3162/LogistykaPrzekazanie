@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GoogleMapReact from 'google-map-react';
+import {Link} from "react-router-dom";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -68,13 +69,16 @@ function VehicleReceivmentList() {
           <p>Semi-trailer: {vehicleReceivment.semi_trailer}</p>
           <p>Complain: {vehicleReceivment.complain}</p>
           <p>Created: {vehicleReceivment.data_created}</p>
+          <p>Target: {vehicleReceivment.target_address}</p>
           <p>Ended: {vehicleReceivment.data_ended}</p>
           <p>User: {vehicleReceivment.user}</p>
           <h1>--------------</h1>
         </div>
       ))}
     <button onClick={handleButtonClick}>Zdaj Pojazdy</button>
-    <button onClick={handleFaultClick}>Zglos awarie</button>
+    <Link to={`/report/fault`}>
+        <button name="modify">Zglos awarie</button>
+    </Link>
     </div>
   );
 }

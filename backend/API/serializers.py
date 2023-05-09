@@ -168,10 +168,16 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
     def finish_action(self, validated_data):
         user = validated_data.get('user')
         truck = validated_data.get('truck')
-        truck.set_availability('Wol')
+        if truck.avaiable == "Awar":
+            truck.set_availability('Woln')
+        else:
+            truck.set_availability('Woln')
         truck.save()
         semi_trailer = validated_data.get('semi_trailer')
-        semi_trailer.set_availability('Wol')
+        if semi_trailer.avaiable == "Awar":
+            semi_trailer.set_availability("Awar")
+        else:
+            semi_trailer.set_availability('Woln')
         semi_trailer.save()
         print('zamiana stanów')
         try:
