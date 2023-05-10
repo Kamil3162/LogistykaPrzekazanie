@@ -14,7 +14,7 @@ function SemiTrailerForm() {
     const [productionYear, setProductionYear] = useState('');
     const [registrationNumber, setRegistrationNumber] = useState('');
     const [semiNote, setSemiNote] = useState(true);
-    const [available, setAvailable] = useState('Wol');
+    const [available, setAvailable] = useState('Woln');
 
     const handleSubmit = async (e) => {
         e.preventDefault();

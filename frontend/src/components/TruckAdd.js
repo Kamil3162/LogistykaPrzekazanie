@@ -39,8 +39,9 @@ function VehicleReceivmentList() {
     <div>
       {samitrucks.map(samitruck => (
         <div key={samitruck.id}>
-          <p>Truck: {samitruck.brand}</p>
-          <p>Semi-trailer: {samitruck.model}</p>
+          <p>Brand: {samitruck.brand}</p>
+          <p>Model: {samitruck.model}</p>
+          <p>Rejestracja: {samitruck.registration_number}</p>
           <p>Production Year: {samitruck.production_year}</p>
           <p>Zeszyt: {samitruck.semi_note ? 'Obecny':'Brak'}</p>
           <p>Stan: {samitruck.avaiable}</p>

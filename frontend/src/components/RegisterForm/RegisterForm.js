@@ -66,7 +66,12 @@ const CreateUserForm = () => {
                           type="text" value={city} onChange={(e) => setCity(e.target.value)} required
                       />
                   </InputBox>
-
+                   <InputBox>
+                      <UpperInfo>Region</UpperInfo>
+                      <RegisterInput
+                          type="text" value={region} onChange={(e) => setRegion(e.target.value)} required
+                      />
+                  </InputBox>
                   <InputBox>
                       <UpperInfo>Email</UpperInfo>
                       <RegisterInput

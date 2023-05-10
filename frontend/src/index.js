@@ -20,6 +20,11 @@ import ModifyUsers from "./components/Layout/ModifyUsers";
 import EditUser from "./components/Layout/EditUser";
 import TruckEquipment from "./components/Layout/TruckEquipment";
 import EditTruck from "./components/Layout/EditTruck";
+import SamiTrucks from "./components/TruckAdd";
+import Faults from "./components/Faults";
+import FaultsDetail from "./components/FaultsDetail";
+import TruckAdd1 from "./components/TruckAdd1";
+import SemiTruckAdd1 from "./components/SemiTruckAdd1";
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
@@ -34,8 +39,11 @@ root.render(
                 <Route path="/logout" element={<Logout/>}/>
                 <Route path="/user" element={<User/>}/>
                 <Route path="/trucks" element={<Trucks/>}/>
+                <Route path="/trucks/add" element={<SemiTruckAdd1/>}/>
                 <Route path="/truck/:pk" element={<EditTruck/>}/>
                 <Route path="/sami-truck/:pk" element={<SemituckDetail/>}/>
+                <Route path="/sami-trucks/" element={<SamiTrucks/>}/>}
+                <Route path="/sami-trucks/add" element={<TruckAdd1/>}/>}
                 <Route path="/user/:pk" element={<EditUser />} />
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
@@ -45,6 +53,8 @@ root.render(
                 <Route path="/report/receivment/truck/equipment" element={<TruckEquipment/>}/>
                 <Route path="/report/receivment/semitruck/equipment" element={<EquipmentSemitruckReport/>}/>
                 <Route path="/report/fault" element={<FaultReport/>}/>
+                <Route path="/faults" element={<Faults/>}/>}
+                <Route path="/faults/:pk" element={<FaultsDetail/>}/>}
                 <Route path="/users" element={<ModifyUsers/>}/>
             </Routes>
         </React.StrictMode>

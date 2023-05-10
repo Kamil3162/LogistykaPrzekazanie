@@ -165,7 +165,7 @@ class Truck(models.Model):
 
 class SemiTrailer(models.Model):
     CHOICES = (
-        ('Wol', 'Wolny'),
+        ('Woln', 'Wolny'),
         ('Zaj', 'Zajety'),
         ('Awar', 'Awaria')
     )

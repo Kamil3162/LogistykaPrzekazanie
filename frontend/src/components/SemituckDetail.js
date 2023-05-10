@@ -89,7 +89,7 @@ function MyModelDetail() {
                 Avaiable:
                <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)} required>
                     <option value="">Wybierz:</option>
-                    <option value="Wol">Wolny</option>
+                    <option value="Woln">Wolny</option>
                     <option value="Zaj">Zajęty</option>
                     <option value="Awar">Awaria</option>
               </select>

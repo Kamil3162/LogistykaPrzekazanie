@@ -50,19 +50,6 @@ function VehicleReceivmentList() {
   }
   return (
     <div>
-        <div style={{ height: '100vh', width: '100%' }}>
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: 'AIzaSyCWmcyn5J6-sHAIEupkWpVHDJ4-g-_0NOM' }}
-            defaultCenter={{ lat: 52.520008, lng: 13.404954 }}
-            defaultZoom={8}
-          >
-            <AnyReactComponent
-              lat={59.955413}
-              lng={30.337844}
-              text="My Marker"
-            />
-          </GoogleMapReact>
-        </div>
       {vehicleReceivments.map(vehicleReceivment => (
         <div key={vehicleReceivment.id}>
           <p>Truck: {vehicleReceivment.truck}</p>

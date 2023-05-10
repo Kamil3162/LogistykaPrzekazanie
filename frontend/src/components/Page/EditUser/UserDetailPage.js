@@ -101,12 +101,6 @@ function MyModelDetail() {
                           />
                       </InputBox>
                       <InputBox>
-                          <UpperInfo>Email</UpperInfo>
-                          <RegisterInput
-                              type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                          />
-                      </InputBox>
-                      <InputBox>
                           <UpperInfo>Password</UpperInfo>
                           <RegisterInput
                               type="password" value={password} onChange={(e) => setPassword(e.target.value)} required

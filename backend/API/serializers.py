@@ -136,6 +136,7 @@ class SemiTrailerSerializer(serializers.ModelSerializer):
         instance.registration_number = validated_data.get('registration_number',
                                                           instance.registration_number)
         instance.semi_note = validated_data.get('semi_note', instance.semi_note)
+        instance.avaiable = validated_data.get('avaiable', instance.avaiable)
         instance.save()
         return instance
 
