@@ -2,9 +2,6 @@ import React, {useEffect, useState} from "react";
 import {MobileIcon, Nav, NavBtn, NavBtnLink, NavContainer, NavItem, NavLinks, NavLogo, NavMenu} from "./NavbarElements";
 import {FaBars} from 'react-icons/fa';
 import axios from "axios";
-import {SidebarLink} from "../Sidebar/SidebarElements";
-import SemiTruckAdd1 from "../SemiTruckAdd1";
-import {Route} from "react-router-dom";
 
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"

@@ -20,7 +20,13 @@ export const EditUserContainer = styled.div`
   }
 
 `;
-
+export const BoxModify = styled.div`
+  
+  width: 400px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+`;
 export const EditUserInput = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -2,6 +2,11 @@ import styled from "styled-components";
 export const FormBox = styled.div`
   width:300px;
   
+  @media screen and (max-width: 768px)
+  {
+    width:100%;
+  }
+  
 `;
 export const InputBox = styled.div`
   display: grid;

@@ -10,7 +10,7 @@ import SemiTrailerPhotoReceivment from "./components/SemiTrailerPhotoReceivment"
 import EquipmentTruckReport from "./components/EquipmentTruckReport";
 import EquipmentSemitruckReport from './components/EquipmentSemitruckReport';
 import VehicleReceivment from "./components/VehicleReceivment";
-import FaultReport from "./components/FaultReport";
+import FaultReport from "./components/FaultReportPage";
 import Users from "./components/Users";
 import Register from "./components/Register";
 import UserDetail from "./components/UserDetail";

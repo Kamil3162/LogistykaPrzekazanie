@@ -18,6 +18,16 @@ export const InputBox = styled.div`
   display: grid;
   margin: 30px 20px;
 `;
+
+export const TextAreaBox = styled.textarea`
+  background: #f6fbff;
+  color: #111;
+  font-size: 16px;
+  padding: 10px 20px 10px 0;
+  border: none;
+  border-bottom: 2px solid #303030;
+  outline: none;
+`;
 export const RegisterInput = styled.input`
   background: #f6fbff;
   color: #111;

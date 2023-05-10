@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {BtnSubmit, FormVehicle, LineForm, VehicleContainer, VihicleH2} from "./VehicleReceivmentElements";
+import { useNavigate } from 'react-router-dom';
 
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
@@ -17,7 +18,7 @@ const VehicleReceivmentForm = () => {
   const [semi_trailers, setSemiTrailers] = useState([]);
   const [target_address, setTarget_address] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
-
+  const navigate = useNavigate();
   const data = {
       truck: truck,
       semi_trailer:semi_trailer,
@@ -36,7 +37,7 @@ const VehicleReceivmentForm = () => {
 
   const handleComplainChecker = () =>{
       if (complain == "T"){
-          window.location.href = "/report/receivment";
+          navigate("/report/receivment");
       }
   };
   const handleSubmit = (e) => {
@@ -46,6 +47,7 @@ const VehicleReceivmentForm = () => {
         console.log(response.data);
         console.log("wyslano data");
         handleComplainChecker();
+
     }).catch (error => {
         console.log(error.response);
         alert("Prawdopodobnie twoje zlecenie jeszcze nie zostało skonczone lub samochody albo naczepy są zajete")

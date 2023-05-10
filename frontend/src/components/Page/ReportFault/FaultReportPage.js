@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {TrucksContainer} from "../Trucks/TruckElements";
+import {EditUserBox} from "../EditUser/UserDetailElements";
+import {FormBox} from "../../LoginForm/LoginFormElements";
+import {InputBox, RegisterInput, TextAreaBox, UpperInfo} from "../../RegisterForm/RegisterFormElements";
+import {BtnSubmit} from "../../EquipmentTruckReport/EquipmentTruckElements";
 
 const client = axios.create({
   baseURL: "http://127.0.0.1:8000/",
@@ -9,7 +14,7 @@ client.defaults.xsrfCookieName = "csrftoken";
 client.defaults.xsrfHeaderName = "X-CSRFToken";
 client.defaults.withCredentials = true;
 
-const FaultReport = () => {
+const FaultReportPage = () => {
   const [photos, setPhotos] = useState([]);
   const [description, setDescription] = useState("");
   const [pk, setPk] = useState(null);
@@ -54,19 +59,30 @@ const FaultReport = () => {
   };
 
   return (
-    <div>
-      <h1>No siema</h1>
+      <EditUserBox>
+        <TrucksContainer>
+         <h1>FaultReport</h1>
       {pk && <p>Primary key: {pk}</p>}
-      <form onSubmit={handleSubmit}>
-        <input type="file" multiple onChange={handleFileChange} />
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+          <FormBox onSubmit={handleSubmit}>
+            <InputBox>
+              <UpperInfo>FaultReport</UpperInfo>
+              <RegisterInput
+                  type="file" multiple onChange={handleFileChange}
+              />
+            </InputBox>
+            <InputBox>
+              <UpperInfo>FaultReport</UpperInfo>
+              <TextAreaBox
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+              />
+            </InputBox>
+
+            <BtnSubmit type="submit">Zatwierdz</BtnSubmit>
+          </FormBox>
+        </TrucksContainer>
+      </EditUserBox>
   );
 };
 
-export default FaultReport;
+export default FaultReportPage;
