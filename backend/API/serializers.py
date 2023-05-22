@@ -138,6 +138,7 @@ class SemiTrailerSerializer(serializers.ModelSerializer):
         instance.semi_note = validated_data.get('semi_note', instance.semi_note)
         instance.avaiable = validated_data.get('avaiable', instance.avaiable)
         instance.save()
+        print("naura")
         return instance
 
 
