@@ -193,6 +193,10 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    def update_target(self,instance, validated_data):
+        instance.target_address = validated_data.get('target_address',
+                                                     instance.target_address)
+        instance.save()
     def update_complain_state(self, instance, validated_data):
         instance.complain = validated_data.get('complain', instance.complain)
         instance.save()

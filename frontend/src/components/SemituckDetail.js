@@ -22,14 +22,17 @@ function MyModelDetail() {
 
   useEffect(() => {
     client.get(`api/samitruck/${pk}`)
-        .then(response =>{
-            setMyModel(response.data)
-            console.log(response.data);
-            setproduction_year(response.data.production_year);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+      .then(response => {
+        setMyModel(response.data);
+        console.log(response.data);
+        setproduction_year(response.data.production_year);
+        setRegistration_number(response.data.registration_number);
+        setName(response.data.brand);
+        setModel(response.data.model);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, [pk]);
 
 
@@ -59,43 +62,49 @@ function MyModelDetail() {
           <p>Model: {myModel.model}</p>
           <p>production Data: {myModel.production_year}</p>
           <p>Registration Number: {myModel.registration_number}</p>
-          <p>State: {myModel.avaiable ? 'Obecny':'Nieobecny'}</p>
+          <p>State: {myModel.avaiable ? 'Obecny' : 'Nieobecny'}</p>
         </div>
       )}
-        <form onSubmit={handleSubmit}>
-              <label>
-              Brand:
-              <input type="text" value={brand} onChange={(e) => setName(e.target.value)} required />
-              </label>
-              <br />
-              <label>
-                Model:
-                <input type="text" value={model} onChange={(e) => setModel(e.target.value)} required />
-              </label>
-              <br />
-              <label>
-                Registration number:
-                <input type="text" value={registration_number} onChange={(e) => setRegistration_number(e.target.value)} required />
-              </label>
-              <br/>
-               Zeszyt:
-               <select value={seminote} onChange={(e) => setSeminote(e.target.value)} required>
-                    <option value="">Wybierz:</option>
-                    <option value="true">Jest</option>
-                    <option value="false">Brak</option>
-              </select>
-              <br />
-              <label>
-                Avaiable:
-               <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)} required>
-                    <option value="">Wybierz:</option>
-                    <option value="Woln">Wolny</option>
-                    <option value="Zaj">Zajęty</option>
-                    <option value="Awar">Awaria</option>
-              </select>
-              </label>
-            <button type="submit">Apply</button>
-        </form>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Brand:
+          <input type="text" value={brand} onChange={(e) => setName(e.target.value)} required />
+        </label>
+        <br />
+        <label>
+          Model:
+          <input type="text" value={model} onChange={(e) => setModel(e.target.value)} required />
+        </label>
+        <br />
+        <label>
+          Registration number:
+          <input
+            type="text"
+            value={registration_number}
+            defaultValue={myModel?.registration_number || ''}
+            onChange={(e) => setRegistration_number(e.target.value)}
+            required={false}
+          />
+        </label>
+        <br/>
+        Zeszyt:
+        <select value={seminote} onChange={(e) => setSeminote(e.target.value)} required>
+          <option value="">Wybierz:</option>
+          <option value="true">Jest</option>
+          <option value="false">Brak</option>
+        </select>
+        <br />
+        <label>
+          Avaiable:
+          <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)} required>
+            <option value="">Wybierz:</option>
+            <option value="Woln">Wolny</option>
+            <option value="Zaj">Zajęty</option>
+            <option value="Awar">Awaria</option>
+          </select>
+        </label>
+        <button type="submit">Apply</button>
+      </form>
     </div>
   );
 }

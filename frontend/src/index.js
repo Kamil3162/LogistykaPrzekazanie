@@ -25,6 +25,8 @@ import AddSamiTrucks from "./components/Layout/AddSamiTruck";
 import AddTrucks from "./components/Layout/AddTruck";
 import ReportFault from "./components/Layout/ReportFault";
 import TruckPhoto from "./components/Layout/TruckPhoto";
+import VehicleReceivmentDetailModify from "./components/VehicleReceivment/VehicleReceivmentDetailModify";
+import VehicleReceivmentDetail from "./components/VehicleReceivment/VehicleReceivmentDetail";
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
@@ -46,7 +48,9 @@ root.render(
                 <Route path="/sami-trucks/add" element={<AddSamiTrucks/>}/>}
                 <Route path="/user/:pk" element={<EditUser />} />
                 <Route path="/register" element={<Register/>}/>
+                <Route path="/vehicle-receivment/:pk" element={<VehicleReceivmentDetailModify/>}/>
                 <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
+                <Route path="/vehicle-receivments/:pk" element={<VehicleReceivmentDetail/>}/>
                 <Route path="/vehicle-receivments/add" element={<VehicleAdd/>}/>
                 <Route path="/report/receivment" element={<TruckPhoto/>}/>
                 <Route path="/report/receivment/semitrailer" element={<SemiTrailerPhotoReceivment/>}/>

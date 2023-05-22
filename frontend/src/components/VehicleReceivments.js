@@ -59,6 +59,12 @@ function VehicleReceivmentList() {
           <p>Target: {vehicleReceivment.target_address}</p>
           <p>Ended: {vehicleReceivment.data_ended}</p>
           <p>User: {vehicleReceivment.user}</p>
+            <Link to={`/vehicle-receivments/${vehicleReceivment.id}`}>
+            <button name="modify">Pokaz szczególy</button>
+            </Link>
+            <Link to={`/vehicle-receivment/${vehicleReceivment.id}`}>
+            <button name="modify">Modifykuj</button>
+            </Link>
           <h1>--------------</h1>
         </div>
       ))}

@@ -262,23 +262,23 @@ class SamiTrucksView(APIView):
 	def post(self, request, pk):
 		try:
 			information = request.data
-			print(information)
 			samitruck = SemiTrailer.objects.get(pk=pk)
-			print(samitruck)
-			serializer = serializers.SemiTrailerSerializer(data=information)
+			# Exclude the current instance from uniqueness validation
+			serializer = serializers.SemiTrailerSerializer(
+				instance=samitruck, data=information, partial=True
+			)
 			if serializer.is_valid():
-				serializer.update(samitruck, information)
+				serializer.save()
 				return Response(serializer.data, status=status.HTTP_200_OK)
 			else:
 				return Response(serializer.errors,
-								status=status.HTTP_404_NOT_FOUND)
-		except Truck.DoesNotExist:
-			return Response({"error": "Following model doesnt exist"},
-							status=status.HTTP_400_BAD_REQUEST)
+								status=status.HTTP_400_BAD_REQUEST)
+		except SemiTrailer.DoesNotExist:
+			return Response({"error": "Following model doesn't exist"},
+							status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({"error": str(e)},
 							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 class SamiTrucksAdd(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
@@ -755,6 +755,34 @@ class VehicleReceivmentsComplains(APIView):
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
 			pass
+
+class VehicleReceivmentTarget(APIView):
+	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
+
+	def get(self, request, pk):
+		try:
+			queryset = VehicleReceivment.objects.get(pk=pk)
+			serializer = serializers.VehicleReceivmentSerializer(queryset)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except VehicleReceivment.DoesNotExist:
+			return Response({"error": "Object doesn't exist"},
+							status=status.HTTP_404_NOT_FOUND)
+	def post(self, request, pk):
+		try:
+			information = request.data
+			queryset = VehicleReceivment.objects.get(pk=pk)
+			serializer = serializers.VehicleReceivmentSerializer(
+				data=information, instance=queryset, partial=True)
+			if serializer.is_valid():
+				serializer.update_target(queryset, information)
+				return Response({"data": "Properly passed data"},
+								status=status.HTTP_200_OK)
+			return Response({"error": serializer.errors},
+							status=status.HTTP_409_CONFLICT)
+		except Exception as e:
+			return Response({"error": str(e)},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 """
 	tworzymy odbior dla naszego kierowcy -
