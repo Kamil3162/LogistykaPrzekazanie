@@ -132,7 +132,7 @@ def registration_num_validator(reg_num):
 class Truck(models.Model):
     CHOICES = (
         ('Woln', 'Wolny'),
-        ('Zaj', 'Zajety'),
+        ('Zaje', 'Zajety'),
         ('Awar', 'Awaria')
     )
     brand = models.CharField(max_length=20, blank=False)
@@ -147,16 +147,21 @@ class Truck(models.Model):
                                            unique=True)
     driven_length = models.IntegerField(blank=False)
     production_date = models.DateField(blank=False)
-    avaiable = models.CharField(choices=CHOICES, blank=False, max_length=4,default='Woln')
+    avaiable = models.CharField(choices=CHOICES,
+                                blank=False,
+                                max_length=4,
+                                default='Woln')
 
     def __str__(self):
         return self.registration_number
 
     def set_availability(self, state):
         choice_dict = dict(self.CHOICES)
+        print(choice_dict)
         try:
             self.avaiable = choice_dict[state]
         except KeyError:
+            print("twoj stary najebany")
             raise ValueError(f"{state} is not a valid choice for avaiable.")
 
     def truck_list(self):
@@ -166,7 +171,7 @@ class Truck(models.Model):
 class SemiTrailer(models.Model):
     CHOICES = (
         ('Woln', 'Wolny'),
-        ('Zaj', 'Zajety'),
+        ('Zaje', 'Zajety'),
         ('Awar', 'Awaria')
     )
     brand = models.CharField(max_length=20, blank=False)
@@ -213,7 +218,8 @@ class VehicleReceivment(models.Model):
 
     truck = models.ForeignKey(Truck,
                               on_delete=models.CASCADE,
-                              blank=True)
+                              blank=True,
+                              null=True)
 
     semi_trailer = models.ForeignKey(SemiTrailer,
                                      on_delete=models.CASCADE,

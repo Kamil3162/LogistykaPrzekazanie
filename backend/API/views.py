@@ -71,6 +71,8 @@ class CurrentUser(APIView):
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except Exception as e:
 			return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+	def post(self, request):
 		pass
 
 class UserLogout(APIView):
@@ -95,12 +97,14 @@ class UserView(APIView):
 	def post(self, request, pk):
 		try:
 			information = request.data
+			print(information)
 			user = AppUser.objects.get(pk=pk)
-			serializer = serializers.UserSerializer(data=information)
+			serializer = serializers.UserSerializer(
+				data=information, instance=user, partial=True)
 			if serializer.is_valid():
 				serializer.update(user, information)
-				serializer.save()
-			return Response(serializer.data, status=status.HTTP_200_OK)
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
 		except user.DoesNotExist:
 			return Response({"error": "this user doesn't exists"},
 							status=status.HTTP_404_NOT_FOUND)
@@ -387,27 +391,28 @@ class VehicleReceivments(APIView):
 			I have to add auto assigment according to truck
 		"""
 		information = request.data
-		print(information.get('truck'))
 		print(information.get('semi_trailer'))
 
 		try:
 			directors = AppUser.active_users.today_active_directors()
 			director = random.choice(directors)
-			trucks_num = list(Truck.objects.filter(avaiable="Woln"))
-			print(trucks_num)
-			truck_num = random.choice(trucks_num)
+			truck_num = None
 			semi_trailer = get_object_or_404(
 				SemiTrailer, registration_number=information.get('semi_trailer'))
 			date_today = str(datetime.datetime.today()).split(" ")[0]
-			if information.get('truck') is True:
-				information['truck'] = truck_num.pk
-			else:
+			if information.get('truck') == '':
+				truck_num = None
 				information['truck'] = None
+			else:
+				trucks_num = list(Truck.objects.filter(avaiable="Woln"))
+				truck_num = random.choice(trucks_num)
+				information['truck'] = truck_num.pk
 			information['data_created'] = date_today
 			information['user'] = request.user.pk
 			information['sender'] = director.pk
 			information['semi_trailer'] = semi_trailer.pk
-			serializer = serializers.VehicleReceivmentSerializer(data=information)
+			serializer = serializers.VehicleReceivmentSerializer(
+				data=information, partial=True)
 			if serializer.is_valid():
 				if information['truck'] is None:
 					information['truck'] = None

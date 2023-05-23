@@ -21,8 +21,7 @@ function SemiTrailerForm() {
     const [semiNote, setSemiNote] = useState(true);
     const [available, setAvailable] = useState('Woln');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         const semiTrailerData = {
             brand,
             model,
@@ -31,15 +30,13 @@ function SemiTrailerForm() {
             semi_note: semiNote,
             avaiable: available,
         };
-        try {
-            const response = await client.post('/api/samitruck/add', semiTrailerData);
-            console.log(response.data);
-            // Optionally redirect or show a success message
-            alert("Pomyslnie dodano naczepe");
-        } catch (error) {
+           client.post('/api/samitruck/add', semiTrailerData).then(response =>{
+                console.log(response.data);
+                alert("Pomyslnie dodano naczepe");
+           })
+               .catch (error=>{
             console.log(error);
-            // Optionally show an error message
-        }
+        })
     };
 
     return (
@@ -97,8 +94,9 @@ function SemiTrailerForm() {
                             onChange={(e) => setSemiNote(e.target.checked)}
                         />
                     </InputBox>
-
-                    <BtnSubmit type="submit">Dodaj</BtnSubmit>
+                    <BtnSubmit
+                        onClick={handleSubmit}
+                        type="submit">Dodaj</BtnSubmit>
                 </FormBox>
             </TrucksContainer>
         </EditUserBox>

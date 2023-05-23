@@ -11,23 +11,23 @@ const client = axios.create({
 client.defaults.xsrfCookieName = 'csrftoken';
 client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
-const handleButtonClick = () => {
+
+function VehicleReceivmentList() {
+  const [vehicleReceivments, setVehicleReceivments] = useState([]);
+  const handleButtonClick = () => {
     const url = 'api/vehicle-receivements/finish';
     client.post(url,{
     }).then(response => {
         console.log(response);
     });
 };
-const handleFaultClick = () =>{
+  const handleFaultClick = () =>{
     const url = 'api/faults';
     client.post(url, {
     }).then(response => {
         console.log(response);
     })
-}
-
-function VehicleReceivmentList() {
-  const [vehicleReceivments, setVehicleReceivments] = useState([]);
+  }
 
   useEffect(() => {
     client.get('/api/vehicle-receivements',{

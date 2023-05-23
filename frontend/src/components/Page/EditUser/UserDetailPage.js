@@ -31,6 +31,14 @@ function MyModelDetail() {
         .then(response =>{
             setMyModel(response.data.user)
             console.log(response.data.user);
+            setName(response.data.user.name);
+            setSurname(response.data.user.surname);
+            setCity(response.data.user.city);
+            setRegion(response.data.user.region);
+            setEmail(response.data.user.email);
+            setZipCode(response.data.user.zip_code);
+            setMobilePhone(response.data.user.mobile_phone);
+            setUsername(response.data.user.username);
         })
         .catch(error => {
             console.log(error);
@@ -79,7 +87,7 @@ function MyModelDetail() {
                       <InputBox>
                           <UpperInfo>Name</UpperInfo>
                           <RegisterInput
-                              type="text"value={name} onChange={(e) => setName(e.target.value)} required
+                              type="text" value={name} onChange={(e) => setName(e.target.value)} required
                           />
                       </InputBox>
                       <InputBox>

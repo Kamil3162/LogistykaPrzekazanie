@@ -79,27 +79,35 @@ function MyModelDetail() {
             <InputBox>
               <UpperInfo>Brand</UpperInfo>
               <RegisterInput
-                  type="text" value={brand || ''} onChange={(e) => setBrand(e.target.value === '' ? null : e.target.value)}
+                  type="text"
+                  value={brand || ''}
+                  onChange={(e) => setBrand(e.target.value === '' ? null : e.target.value)}
               />
             </InputBox>
 
             <InputBox>
               <UpperInfo>Model</UpperInfo>
               <RegisterInput
-                  type="text" value={model || ''} onChange={(e) => setModel(e.target.value === '' ? null : e.target.value)}
+                  type="text"
+                  value={model || ''}
+                  onChange={(e) => setModel(e.target.value === '' ? null : e.target.value)}
               />
             </InputBox>
 
             <InputBox>
               <UpperInfo>Power</UpperInfo>
               <RegisterInput
-                  type="number" value={power || ''} onChange={(e) => setPower(e.target.value === '' ? null : Number(e.target.value))}
+                  type="number"
+                  value={power || ''}
+                  onChange={(e) => setPower(e.target.value === '' ? null : Number(e.target.value))}
               />
             </InputBox>
             <InputBox>
               <UpperInfo>Registration Number</UpperInfo>
               <RegisterInput
-                  type="text" value={registration_number} onChange={(e) => setRegistration_number(e.target.value)}
+                  type="text"
+                  value={registration_number}
+                  onChange={(e) => setRegistration_number(e.target.value)}
               />
             </InputBox>
             <InputBox>
@@ -107,7 +115,7 @@ function MyModelDetail() {
               <select value={avaiable} onChange={(e) => setAvaiable(e.target.value)}>
                 <option value="">--Select an option--</option>
                 <option value="Woln">Wolny</option>
-                <option value="Zaj">Zajęty</option>
+                <option value="Zaje">Zajęty</option>
                 <option value="Awar">Awaria</option>
               </select>
             </InputBox>

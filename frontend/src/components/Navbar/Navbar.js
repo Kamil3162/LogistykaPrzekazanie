@@ -62,6 +62,15 @@ const Navbar = (props) => {
                             <NavItem>
                                 <NavLinks to="/sami-trucks/">Samitrucks</NavLinks>
                             </NavItem>
+                            <NavItem>
+                                <NavLinks to="/faults">Faults</NavLinks>
+                            </NavItem>
+                            <NavItem>
+                                <NavLinks to="/sami-trucks/add">SamiTruck Add</NavLinks>
+                            </NavItem>
+                            <NavItem>
+                                <NavLinks to="/trucks/add">Trucks Add</NavLinks>
+                            </NavItem>
                         </>
                     }
                     {session &&
@@ -82,15 +91,7 @@ const Navbar = (props) => {
                             <NavItem>
                                 <NavLinks to="/report/fault">Report fault</NavLinks>
                             </NavItem>
-                            <NavItem>
-                                <NavLinks to="/faults">Faults</NavLinks>
-                            </NavItem>
-                            <NavItem>
-                                <NavLinks to="/sami-trucks/add">SamiTruck Add</NavLinks>
-                            </NavItem>
-                            <NavItem>
-                                <NavLinks to="/trucks/add">Trucks Add</NavLinks>
-                            </NavItem>
+
                         </>
                     }
                 </NavMenu>

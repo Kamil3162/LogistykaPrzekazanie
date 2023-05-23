@@ -12,22 +12,37 @@ client.defaults.xsrfHeaderName = 'X-CSRFToken';
 client.defaults.withCredentials = true;
 function UserPage(){
   const [currentUser, setCurrentUser] = useState({});
+  const [truck, setTruck] = useState([]);
+  const [id, setId] = useState(null);
   const fetchUser = () =>{
     client.get('/api/user', {
     })
     .then(response => {
-      console.log("to jest data z usera")
-      console.log(response.data.is_admin);
+      console.log("to jest data z usera");
+      console.log(response.data);
       setCurrentUser(response.data);
+      setTruck(response.data.own_truck);
+      setId(response.data.id);
     })
     .catch(error => {
       console.error(error);
     });
   }
+
+
   useEffect(() => {
     fetchUser()
   }, [])
 
+  const handleAddTruck = () =>{
+      client.post(`/api/user/${id}`,{
+          own_truck: truck
+      }).then(response =>{
+          console.log(response);
+      }).catch(error =>{
+            console.log(error);
+      })
+  }
   return (
       <UserBox>
           <UserContainer>
@@ -60,8 +75,15 @@ function UserPage(){
                       </UserInput>
                       <UserInput>
                           <span>Truck</span>
-                          <span>{currentUser.own_truck}</span>
+                            {/* Update the text value */}
+                            <input
+                                type="text"
+                                value={truck}
+                                defaultValue={currentUser.own_truck || ""}
+                                onChange={(e) => setTruck(e.target.value)}
+                            />
                       </UserInput>
+                      <button onClick={handleAddTruck}>Dodaj ciezarówke</button>
                   </div>
               </div>
 
