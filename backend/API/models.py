@@ -167,7 +167,6 @@ class Truck(models.Model):
     def truck_list(self):
         trucks = []
 
-
 class SemiTrailer(models.Model):
     CHOICES = (
         ('Woln', 'Wolny'),
@@ -245,7 +244,7 @@ class VehicleReceivment(models.Model):
     story = models.CharField(max_length=300, blank=True)
 
     def __str__(self):
-        return f"Receivment {self.truck.brand}"
+        return f"Receivment {self.id}"
 
 
 class TruckComplainPhoto(models.Model):

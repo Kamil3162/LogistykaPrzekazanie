@@ -16,7 +16,7 @@ function MyModelDetail() {
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [power, setPower] = useState('');
-  const [registration_number, setRegistration_number] = useState('');
+  const [registration_number1, setRegistration_number] = useState('');
   const [avaiable, setAvaiable] = useState('');
   const [driven_length, setdriven_length] = useState('');
   const [production_date, setproduction_date] = useState('');
@@ -31,6 +31,8 @@ function MyModelDetail() {
             setPower(response.data.power);
             setproduction_date(response.data.production_date);
             setdriven_length(response.data.driven_length);
+            setRegistration_number(response.data.registration_number);
+            console.log(response.data.registration_number);
         })
         .catch(error => {
             console.log(error);
@@ -44,7 +46,7 @@ function MyModelDetail() {
       brand,
       model,
       power,
-      registration_number,
+      registration_number: registration_number1,
       avaiable,
       driven_length,
       production_date
@@ -88,7 +90,11 @@ function MyModelDetail() {
         </label>
         <label>
         Registration Number:
-        <input type="text" value={registration_number} onChange={(e) => setRegistration_number(e.target.value)} />
+        <input
+            type="text"
+            value={registration_number1}
+            defaultValue={registration_number1 || ''}
+            onChange={(e) => setRegistration_number(e.target.value)} />
         </label>
         <br />
         <label>

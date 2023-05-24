@@ -32,7 +32,9 @@ function MyModelDetail() {
             setBrand(response.data.brand);
             setModel(response.data.model);
             setPower(response.data.power);
+            setRegistration_number(response.data.registration_number);
             setproduction_date(response.data.production_date);
+            console.log(registration_number);
             setdriven_length(response.data.driven_length);
         })
         .catch(error => {

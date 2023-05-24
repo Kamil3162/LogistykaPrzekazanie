@@ -20,8 +20,8 @@ function SemiTrailerForm() {
   const [registrationNumber, setRegistrationNumber] = useState('');
   const [drivenLength, setDrivenLength] = useState('');
   const [productionDate, setProductionDate] = useState('');
-  const [available, setAvailable] = useState('Wol');
-  const handleSubmit = async (e) => {
+  const [available, setAvailable] = useState('Woln');
+  const handleSubmit = (e) => {
     e.preventDefault();
     const semiTrailerData = {
       brand,
@@ -32,28 +32,20 @@ function SemiTrailerForm() {
       production_date: productionDate,
       avaiable: available
     };
-    try {
-      const response = await client.post('/api/trucks/add', semiTrailerData);
-      console.log(response.data);
-      setBrand('');
-      setModel('');
-      setPower('');
-      setRegistrationNumber('');
-      setDrivenLength('');
-      setProductionDate('');
-      setAvailable('Wol');
-      alert('Dodano samochod');
-      // Optionally redirect or show a success message
-    } catch (error) {
-      console.log(error);
-      // Optionally show an error message
-    }
+    client.post('/api/trucks/add', semiTrailerData)
+      .then(response =>{
+          console.log(response);
+          alert("Dodano ciezarowke");
+      })
+      .catch(error =>{
+          console.log(error);
+      })
   };
 
   return (
       <EditUserBox>
           <TrucksContainer>
-              <FormBox onSubmit={handleSubmit}>
+              <FormBox>
 
                   <InputBox>
                       <UpperInfo>Brand</UpperInfo>
@@ -92,9 +84,7 @@ function SemiTrailerForm() {
                           type="date" id="production_date" value={productionDate} onChange={(e) => setProductionDate(e.target.value)} required
                       />
                   </InputBox>
-
-
-                  <BtnSubmit type="submit">Dodaj</BtnSubmit>
+                  <BtnSubmit onClick={handleSubmit} type="submit">Dodaj</BtnSubmit>
               </FormBox>
           </TrucksContainer>
       </EditUserBox>

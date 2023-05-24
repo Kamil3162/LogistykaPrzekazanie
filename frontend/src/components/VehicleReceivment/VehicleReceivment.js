@@ -46,6 +46,7 @@ const VehicleReceivmentForm = () => {
         .then(response =>{
         console.log(response.data);
         console.log("wyslano data");
+        alert("Dodano odebranie samochodu");
         handleComplainChecker();
 
     }).catch (error => {

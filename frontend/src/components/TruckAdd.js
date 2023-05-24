@@ -28,7 +28,7 @@ function VehicleReceivmentList() {
     }, []);
 
     const handleDelete = (id) => {
-    client.post(`api/samitruck/${id}`)
+    client.post(`api/samitruck-del/${id}`)
         .then(response =>{
           console.log(response)
         }).catch(error => {
@@ -39,6 +39,7 @@ function VehicleReceivmentList() {
     <div>
       {samitrucks.map(samitruck => (
         <div key={samitruck.id}>
+          <p>Brand: {samitruck.id}</p>
           <p>Brand: {samitruck.brand}</p>
           <p>Model: {samitruck.model}</p>
           <p>Rejestracja: {samitruck.registration_number}</p>

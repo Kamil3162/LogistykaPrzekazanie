@@ -166,9 +166,9 @@ class TruckView(APIView):
 	def post(self, request, pk):
 		try:
 			information = request.data
-			print(information)
 			truck = Truck.objects.get(pk=pk)
-			serializer = serializers.TruckSerializerAdd(data=information)
+			serializer = serializers.TruckSerializerAdd(
+				instance=truck, data=information, partial=True)
 			if serializer.is_valid():
 				serializer.update(truck, information)
 				return Response(serializer.data, status=status.HTTP_200_OK)
@@ -320,6 +320,7 @@ class SamiTrucksDetailView(APIView):
 
 	def post(self, request, pk):
 		try:
+			print(pk)
 			queryset = SemiTrailer.objects.get(pk=pk)
 			receivment = VehicleReceivment.objects.get(
 				semi_trailer=queryset, data_ended=None)
@@ -372,7 +373,7 @@ class VehicleReceivments(APIView):
 		user = request.user
 		queryset = None
 		if user.is_staff == 1 and user.is_superuser == 1:
-			queryset = VehicleReceivment.objects.filter(data_ended=None)
+			queryset = VehicleReceivment.objects.all()
 		else:
 			queryset = VehicleReceivment.objects.filter(
 				user=request.user, data_ended=None)
@@ -450,29 +451,34 @@ class VehicleStatement(APIView):
 				user=user,
 				data_ended=None
 			)
-			print('esa')
-			receivment_back.data_ended = datetime.datetime.now()
-			receivment_back.save()
-			truck = receivment_back.truck
-			semi_trailer = receivment_back.semi_trailer
-			information['data_created'] = date_today
-			information['data_ended'] = date_today
-			information['truck'] = truck.pk
-			information['semi_trailer'] = semi_trailer.pk
-			information['target_address'] = information['target_address']
-			information['sender'] = user.pk
-			information['user'] = director.pk
-			serializer = serializers.VehicleReceivmentSerializer(data=information)
-			if serializer.is_valid():
-				information['truck'] = truck
-				information['semi_trailer'] = semi_trailer
-				information['sender'] = user
-				information['user'] = director
-				print("test 1 test 2")
-				serializer.finish_action(information)
-				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			print(receivment_back)
+			if receivment_back.complain != 'N':
+				return Response({"error":"Nie mozesz zdac pojazdow bo jest problem z twoim zleceniem"},
+								status=status.HTTP_406_NOT_ACCEPTABLE)
 			else:
-				return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+				print('esa')
+				receivment_back.data_ended = datetime.datetime.now()
+				receivment_back.save()
+				truck = receivment_back.truck
+				semi_trailer = receivment_back.semi_trailer
+				information['data_created'] = date_today
+				information['data_ended'] = date_today
+				information['truck'] = truck.pk
+				information['semi_trailer'] = semi_trailer.pk
+				information['target_address'] = information['target_address']
+				information['sender'] = user.pk
+				information['user'] = director.pk
+				serializer = serializers.VehicleReceivmentSerializer(data=information)
+				if serializer.is_valid():
+					information['truck'] = truck
+					information['semi_trailer'] = semi_trailer
+					information['sender'] = user
+					information['user'] = director
+					print("test 1 test 2")
+					serializer.finish_action(information)
+					return Response(serializer.data, status=status.HTTP_201_CREATED)
+				else:
+					return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
 		except Exception as e:
 			return Response({"error":str(e)},
 							status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -78,7 +78,7 @@ const FaultReportPage = () => {
               />
             </InputBox>
 
-            <BtnSubmit type="submit">Zatwierdz</BtnSubmit>
+            <BtnSubmit onClick={handleSubmit} type="submit">Zatwierdz</BtnSubmit>
           </FormBox>
         </TrucksContainer>
       </EditUserBox>
