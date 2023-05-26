@@ -92,9 +92,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'logistykalog13',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'USER': 'logistyka',
+        'PASSWORD': 'logistykapass',
+        'HOST': '172.25.0.2',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }

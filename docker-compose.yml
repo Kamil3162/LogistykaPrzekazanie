@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: logistykalog13
+      MYSQL_USER: logistyka
+      MYSQL_PASSWORD: logistykapass
+      MYSQL_ROOT_PASSWORD: logistykaroot
+    networks:
+      mynetwork:
+        ipv4_address: 172.25.0.2
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - DB_HOST='%'
+      - DB_NAME=logisykalog13
+      - DB_USER=logistyka
+      - DB_PASSWORD=logistykapass
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
