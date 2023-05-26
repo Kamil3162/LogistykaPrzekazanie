@@ -13,7 +13,7 @@ client.defaults.withCredentials = true;
 
 const VehicleReceivmentForm = () => {
   const [truck, setTruck] = useState("");
-  const [semi_trailer, setSemi_trailer] = useState("");
+  const [semi_trailer, setSemiTrailer] = useState("");
   const [complain, setComplain] = useState("N");
   const [semi_trailers, setSemiTrailers] = useState([]);
   const [target_address, setTarget_address] = useState("");
@@ -35,6 +35,12 @@ const VehicleReceivmentForm = () => {
       });
   }, []);
 
+    useEffect(() => {
+        if (semi_trailers.length > 0) {
+            setSemiTrailer(semi_trailers[0].registration_number);
+        }
+    }, [semi_trailers]);
+
   const handleComplainChecker = () =>{
       if (complain == "T"){
           navigate("/report/receivment");
@@ -42,12 +48,12 @@ const VehicleReceivmentForm = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(data.semi_trailer);
     client.post('api/vehicle-receivements', data)
         .then(response =>{
         console.log(response.data);
         console.log("wyslano data");
-        alert("Dodano odebranie samochodu");
-        handleComplainChecker();
+        return navigate("/");
 
     }).catch (error => {
         console.log(error.response);
@@ -57,15 +63,7 @@ const VehicleReceivmentForm = () => {
 
   return (
       <VehicleContainer>
-            <VihicleH2>Odbiór samchodu</VihicleH2>
-          <div>
-              Data-
-              {semi_trailers.map(semitrailer => (
-                  <div key={semitrailer.id}>
-                    <p>{semitrailer.registration_number} Stan {semitrailer.avaiable}</p>
-                  </div>
-              ))}
-          </div>
+            <VihicleH2>Wynajmij samochod</VihicleH2>
           <FormVehicle onSubmit={handleSubmit}>
               <LineForm>
                   <label htmlFor="truck">Truck:</label>
@@ -74,7 +72,17 @@ const VehicleReceivmentForm = () => {
 
               <LineForm>
                   <label htmlFor="semi-trailer">Semi-trailer:</label>
-                  <input type="text" id="semi-trailer" value={semi_trailer} onChange={(e) => setSemi_trailer(e.target.value)} />
+                  <select
+                      id="semi-trailer"
+                      value={semi_trailer}
+                      onChange={(e) => setSemiTrailer(e.target.value)}
+                  >
+                      {semi_trailers.map((semitrailer) => (
+                          <option key={semitrailer.id} value={semitrailer.registration_number}>
+                              {semitrailer.registration_number}
+                          </option>
+                      ))}
+                  </select>
               </LineForm>
 
               <LineForm>

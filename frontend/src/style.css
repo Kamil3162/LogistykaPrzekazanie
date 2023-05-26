@@ -1,0 +1,30 @@
+.page {
+    width: 1300px;
+    margin: 0 auto;
+    background: #f1f1f1;
+    color: #111;
+}
+.text-decoration {
+    text-decoration: none;
+    color: #111;
+}
+.text-center {
+    text-align: center;
+}
+.col-12 {
+    width: 100%;
+}
+.font20 {
+    font-size: 20px;
+}
+.height-half {
+    display: grid;
+    height: 50vh;
+    align-content: center;
+}
+@media screen and (max-width: 768px)
+{
+    .page {
+        width: 100%;
+    }
+}

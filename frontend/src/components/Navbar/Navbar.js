@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {MobileIcon, Nav, NavBtn, NavBtnLink, NavContainer, NavItem, NavLinks, NavLogo, NavMenu} from "./NavbarElements";
 import {FaBars} from 'react-icons/fa';
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
@@ -37,9 +38,13 @@ const Navbar = (props) => {
     return (
         <Nav>
             <NavContainer>
+
                 <NavLogo>
-                    LOGISTICS
+                    <Link to="/" className="text-decoration">
+                        LOGISTICS
+                    </Link>
                 </NavLogo>
+
                 <MobileIcon onClick={props.toggle}>
                     <FaBars />
                 </MobileIcon>

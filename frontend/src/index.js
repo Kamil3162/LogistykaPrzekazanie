@@ -27,8 +27,12 @@ import ReportFault from "./components/Layout/ReportFault";
 import TruckPhoto from "./components/Layout/TruckPhoto";
 import VehicleReceivmentDetailModify from "./components/VehicleReceivment/VehicleReceivmentDetailModify";
 import VehicleReceivmentDetail from "./components/VehicleReceivment/VehicleReceivmentDetail";
+
+import './style.css'
+
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
+
 
 
 

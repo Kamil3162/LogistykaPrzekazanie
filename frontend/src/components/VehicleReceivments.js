@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GoogleMapReact from 'google-map-react';
 import {Link} from "react-router-dom";
+import {NavBtnLink} from "./Navbar/NavbarElements";
+import {BtnSubmit} from "./EquipmentTruckReport/EquipmentTruckElements";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -20,7 +22,7 @@ function VehicleReceivmentList() {
     }).then(response => {
         console.log(response);
     });
-};
+  };
   const handleFaultClick = () =>{
     const url = 'api/faults';
     client.post(url, {
@@ -39,6 +41,7 @@ function VehicleReceivmentList() {
       })
       .catch(error => {
         console.log(error);
+        setVehicleReceivments(undefined);
       });
   }, []);
 
@@ -48,30 +51,45 @@ function VehicleReceivmentList() {
       zoom: 8,
     });
   }
+
   return (
-    <div>
-      {vehicleReceivments.map(vehicleReceivment => (
-        <div key={vehicleReceivment.id}>
-          <p>Truck: {vehicleReceivment.truck}</p>
-          <p>Semi-trailer: {vehicleReceivment.semi_trailer}</p>
-          <p>Complain: {vehicleReceivment.complain}</p>
-          <p>Created: {vehicleReceivment.data_created}</p>
-          <p>Target: {vehicleReceivment.target_address}</p>
-          <p>Ended: {vehicleReceivment.data_ended}</p>
-          <p>User: {vehicleReceivment.user}</p>
-            <Link to={`/vehicle-receivments/${vehicleReceivment.id}`}>
-            <button name="modify">Pokaz szczególy</button>
+    <div className="page">
+      {(vehicleReceivments.length > 0) &&
+        <div style={{textAlign: "center"}}>
+          <h2>Aktualny samochod</h2>
+          {vehicleReceivments.map(vehicleReceivment => (
+              <div key={vehicleReceivment.id}>
+                <p>Truck: {vehicleReceivment.truck}</p>
+                <p>Semi-trailer: {vehicleReceivment.semi_trailer}</p>
+                <p>Complain: {vehicleReceivment.complain}</p>
+                <p>Created: {vehicleReceivment.data_created}</p>
+                <p>Target: {vehicleReceivment.target_address}</p>
+                <p>Ended: {vehicleReceivment.data_ended}</p>
+                <p>User: {vehicleReceivment.user}</p>
+                <Link to={`/vehicle-receivments/${vehicleReceivment.id}`}>
+                  <BtnSubmit name="modify">Pokaz szczególy</BtnSubmit>
+                </Link>
+              </div>
+          ))}
+
+            <BtnSubmit style={{background: "linear-gradient(to right,#58c652bf ,#24912c)"}} onClick={handleButtonClick} >Zdaj Pojazdy</BtnSubmit>
+            <Link to={`/report/fault`}>
+                <BtnSubmit style={{background: "linear-gradient(to right,#ca4e4e ,#a61c1c)", margin: "20px"}} name="modify">Zglos awarie</BtnSubmit>
             </Link>
-            <Link to={`/vehicle-receivment/${vehicleReceivment.id}`}>
-            <button name="modify">Modifykuj</button>
-            </Link>
-          <h1>--------------</h1>
         </div>
-      ))}
-    <button onClick={handleButtonClick}>Zdaj Pojazdy</button>
-    <Link to={`/report/fault`}>
-        <button name="modify">Zglos awarie</button>
-    </Link>
+      }
+      {(vehicleReceivments.length <= 0) &&
+          <>
+            <div className="col-12 text-center height-half">
+              <span className="font20">Nie posiadasz zadnego wynajetego samochodu</span>
+              <div style={{marginTop: "20px"}}>
+                <NavBtnLink to="/vehicle-receivments/add">WYNAJMIJ</NavBtnLink>
+              </div>
+            </div>
+          </>
+
+      }
+
     </div>
   );
 }

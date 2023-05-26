@@ -30,6 +30,13 @@ export const NavLogo = styled.div`
   font-size: 2em;
   font-family: 'Ubuntu', sans-serif;
   align-items: center;
+  text-decoration: none;
+  
+  
+  @media screen and (max-width: 768px)
+  {
+    margin-left: 10px;
+  }
     `;
 
 export const MobileIcon = styled.div`

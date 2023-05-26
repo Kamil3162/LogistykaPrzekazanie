@@ -383,54 +383,64 @@ class VehicleReceivments(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
-		"""
-			I think that kierownik will be choose automatticly - totaly
-			if user have permissions staff etc - director and he can make action
-			Brac lastlogin kiedy natapic np w tym dniu to znaczy ze jest w pracy
-
-			-----------------------
-			I have to add auto assigment according to truck
-		"""
 		information = request.data
-		print(information.get('semi_trailer'))
-
-		try:
-			directors = AppUser.active_users.today_active_directors()
-			director = random.choice(directors)
-			truck_num = None
-			semi_trailer = get_object_or_404(
-				SemiTrailer, registration_number=information.get('semi_trailer'))
-			date_today = str(datetime.datetime.today()).split(" ")[0]
-			if information.get('truck') == '':
+		user = request.user
+		queryset = VehicleReceivment.objects.filter(user=request.user,
+													data_ended=None)
+		print(queryset)
+		if queryset.exists():
+			return Response({"error": "Masz juz aktywowane zlecenie"},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		else:
+			try:
+				directors = AppUser.active_users.today_active_directors()
+				director = random.choice(directors)
+				semi_trailer = get_object_or_404(SemiTrailer,
+												 registration_number=information.get(
+													 'semi_trailer'))
+				date_today = datetime.datetime.today().date()
 				truck_num = None
-				information['truck'] = None
-			else:
-				trucks_num = list(Truck.objects.filter(avaiable="Woln"))
-				truck_num = random.choice(trucks_num)
-				information['truck'] = truck_num.pk
-			information['data_created'] = date_today
-			information['user'] = request.user.pk
-			information['sender'] = director.pk
-			information['semi_trailer'] = semi_trailer.pk
-			serializer = serializers.VehicleReceivmentSerializer(
-				data=information, partial=True)
-			if serializer.is_valid():
-				if information['truck'] is None:
-					information['truck'] = None
+
+				if information.get('truck') != '':
+					trucks = Truck.objects.filter(avaiable="Woln")
+					truck_num = random.choice(trucks)
+					information['truck'] = truck_num.pk
 				else:
-					information['truck'] = truck_num
-				information['semi_trailer'] = semi_trailer
-				information['user'] = request.user
-				information['sender'] = director
-				try:
-					receivment = serializer.create(information)
-					receivment.save()
-					return Response(serializer.data, status=status.HTTP_201_CREATED)
-				except IntegrityError as e:
-					return Response({"error":"Something bad with data or duplication"}, status=status.HTTP_409_CONFLICT)
-			return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-		except Exception as e:
-			return Response({"error":str(e)}, status=status.HTTP_424_FAILED_DEPENDENCY)
+					information['truck'] = None
+
+				information['data_created'] = date_today
+				information['user'] = request.user.pk
+				information['sender'] = director.pk
+				information['semi_trailer'] = semi_trailer.pk
+
+				serializer = serializers.VehicleReceivmentSerializer(
+					data=information, partial=True)
+
+				if serializer.is_valid():
+					if information['truck'] is None:
+						information['truck'] = None
+					else:
+						information['truck'] = truck_num
+
+					information['semi_trailer'] = semi_trailer
+					information['user'] = request.user
+					information['sender'] = director
+
+					try:
+						receivment = serializer.create(information)
+						receivment.save()
+						return Response(serializer.data,
+										status=status.HTTP_201_CREATED)
+					except IntegrityError as e:
+						return Response({
+											"error": "Something bad with data or duplication"},
+										status=status.HTTP_409_CONFLICT)
+
+				return Response(serializer.errors,
+								status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			except Exception as e:
+				return Response({"error": str(e)},
+								status=status.HTTP_424_FAILED_DEPENDENCY)
 
 class VehicleStatement(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
