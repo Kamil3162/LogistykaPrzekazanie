@@ -383,6 +383,14 @@ class VehicleReceivments(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 	def post(self, request):
+		"""
+			I think that kierownik will be choose automatticly - totaly
+			if user have permissions staff etc - director and he can make action
+			Brac lastlogin kiedy natapic np w tym dniu to znaczy ze jest w pracy
+
+			-----------------------
+			I have to add auto assigment according to truck
+		"""
 		information = request.data
 		user = request.user
 		queryset = VehicleReceivment.objects.filter(user=request.user,
@@ -453,21 +461,20 @@ class VehicleStatement(APIView):
 		user = request.user
 		information = request.data
 		try:
-			date_today = str(datetime.datetime.today()).split(" ")[0]
+			print(information)
+			date_today = datetime.datetime.today().date()
 			directors = AppUser.active_users.today_active_directors()
-			print(directors)
 			director = random.choice(directors)
 			receivment_back = VehicleReceivment.objects.get(
 				user=user,
 				data_ended=None
 			)
-			print(receivment_back)
-			if receivment_back.complain != 'N':
-				return Response({"error":"Nie mozesz zdac pojazdow bo jest problem z twoim zleceniem"},
+			if receivment_back.complain == 'A' or receivment_back.target_address == "":
+				return Response({
+									"error": "Nie mozesz zdac pojazdow bo jest problem z twoim zleceniem"},
 								status=status.HTTP_406_NOT_ACCEPTABLE)
 			else:
-				print('esa')
-				receivment_back.data_ended = datetime.datetime.now()
+				receivment_back.data_ended = datetime.datetime.today().date()
 				receivment_back.save()
 				truck = receivment_back.truck
 				semi_trailer = receivment_back.semi_trailer
@@ -475,20 +482,55 @@ class VehicleStatement(APIView):
 				information['data_ended'] = date_today
 				information['truck'] = truck.pk
 				information['semi_trailer'] = semi_trailer.pk
-				information['target_address'] = information['target_address']
+				information['target_address'] = receivment_back.target_address
 				information['sender'] = user.pk
 				information['user'] = director.pk
-				serializer = serializers.VehicleReceivmentSerializer(data=information)
+				serializer = serializers.VehicleReceivmentSerializer(
+					data=information, partial=True)
 				if serializer.is_valid():
+					print("esa esa")
 					information['truck'] = truck
 					information['semi_trailer'] = semi_trailer
 					information['sender'] = user
 					information['user'] = director
-					print("test 1 test 2")
 					serializer.finish_action(information)
-					return Response(serializer.data, status=status.HTTP_201_CREATED)
+					return Response(serializer.data,
+									status=status.HTTP_201_CREATED)
 				else:
-					return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+					return Response(serializer.errors,
+									status=status.HTTP_409_CONFLICT)
+		except Exception as e:
+			return Response({"error":"Cos poszlo nie tak "},
+							status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class VehicleStatementAdmin(APIView):
+	permission_classes = (permissions.IsAuthenticated,permissions.IsAdminUser,)
+	authentication_classes = (SessionAuthentication,)
+
+	def get(self, request, pk):
+		return Response(status=status.HTTP_200_OK)
+
+	def post(self, request, pk):
+		try:
+			print("konczenie zlecenia przez admina")
+			user = request.user
+			context = {
+				'user':user.pk,
+				'data_ended': str(datetime.datetime.today()).split(" ")[0]
+			}
+			information = request.data
+			receivment_back = VehicleReceivment.objects.get(pk=pk)
+			serializer = serializers.VehicleReceivmentSerializer(
+				instance=receivment_back, data=context, partial=True)
+			if serializer.is_valid():
+				print('esa')
+				context['user'] = user
+				serializer.finish_by_admin(receivment_back, context)
+				return Response({"data":"esa"}, status=status.HTTP_200_OK)
+			return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+		except VehicleReceivment.DoesNotExist:
+			return Response(serializer.errors,
+							status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({"error":str(e)},
 							status=status.HTTP_500_INTERNAL_SERVER_ERROR)

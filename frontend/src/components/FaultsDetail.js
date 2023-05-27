@@ -28,7 +28,7 @@ const FaultsDisplay = () => {
     return (
     <div>
         {photos.map(photo => (
-        <img key={photo.id} src={`http://127.0.0.1:8000${photo.photo}`} alt={`Photo ${photo.id}`} />          ))}
+        <img key={photo.id} src={`http://127.0.0.1:8000${photo.photo}`} alt={`Photo ${photo.id}`}/>))}
     </div>
     );
 }

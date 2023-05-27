@@ -77,7 +77,6 @@ const VehicleReceivmentForm = () => {
               <select id="complain" value={complain} onChange={(e) => setComplain(e.target.value)}>
                 <option value="N">Nie</option>
                 <option value="T">Tak</option>
-                <option value="A">Awaria</option>
               </select>
 
               <button type="submit">Submit</button>

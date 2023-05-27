@@ -43,9 +43,11 @@ const FaultReportPage = () => {
       .post(`api/vehicle-receivements/${pk}`, formData)
       .then((response) => {
         console.log(response);
+        alert("Pozytywnie dodano blad w trakcie wypozyczenia");
       })
       .catch((error) => {
         console.log(error);
+        alert("Brak aktywnego zlecenia");
       });
   };
 

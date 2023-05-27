@@ -22,7 +22,8 @@ const VehicleReceivmentForm = () => {
   const data = {
       truck: truck,
       semi_trailer:semi_trailer,
-      complain: complain
+      complain: complain,
+      target_address:target_address
   };
   useEffect(() =>{
       client.get('api/samitrucks',{
@@ -90,7 +91,6 @@ const VehicleReceivmentForm = () => {
                   <select id="complain" value={complain} onChange={(e) => setComplain(e.target.value)}>
                       <option value="N">Nie</option>
                       <option value="T">Tak</option>
-                      <option value="A">Awaria</option>
                   </select>
               </LineForm>
 

@@ -23,6 +23,19 @@ function VehicleReceivmentList() {
         console.log(response);
     });
   };
+
+  const [isAdmin, setisAdmin] = useState(false);
+
+    client.get('/api/user', {
+    })
+    .then(response => {
+        setisAdmin(response.data.is_admin);
+        console.log(isAdmin);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
   const handleFaultClick = () =>{
     const url = 'api/faults';
     client.post(url, {
@@ -51,7 +64,16 @@ function VehicleReceivmentList() {
       zoom: 8,
     });
   }
-
+  function handleFinishReceivment(pk) {
+      client.post(`api/vehicle-receivements/admin/finish/${pk}`,{
+      })
+          .then(response => {
+          console.log(response);
+      })
+          .catch(error =>{
+            console.log(error);
+          })
+  }
   return (
     <div className="page">
       {(vehicleReceivments.length > 0) &&
@@ -66,9 +88,24 @@ function VehicleReceivmentList() {
                 <p>Target: {vehicleReceivment.target_address}</p>
                 <p>Ended: {vehicleReceivment.data_ended}</p>
                 <p>User: {vehicleReceivment.user}</p>
+                {vehicleReceivment.complain === 'A' && !vehicleReceivment.data_ended && isAdmin && (
+                    <>
+                        <BtnSubmit name="modify"
+                                   onClick={() => handleFinishReceivment(vehicleReceivment.id)}>
+                            Zakoncz
+                        </BtnSubmit>
+                    </>
+                  )}
                 <Link to={`/vehicle-receivments/${vehicleReceivment.id}`}>
                   <BtnSubmit name="modify">Pokaz szczególy</BtnSubmit>
                 </Link>
+                   {!vehicleReceivment.target_address && isAdmin && (
+                    <>
+                        <Link to={`/vehicle-receivment/${vehicleReceivment.id}`}>
+                            <BtnSubmit name="modify">Dodaj trase</BtnSubmit>
+                        </Link>
+                    </>
+                  )}
               </div>
           ))}
 

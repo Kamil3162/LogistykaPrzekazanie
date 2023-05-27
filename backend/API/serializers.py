@@ -190,6 +190,12 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         except IntegrityError:
             print("Data exist in db or data is not properly")
 
+    def finish_by_admin(self, instance, validated_data):
+        print('Zakonczenie przez admina')
+        instance.data_ended = validated_data.get('data_ended')
+        instance.user = validated_data.get('user')
+        instance.save()
+
     def update(self, instance, validated_data):
         instance.date_ended = validated_data.get('date_ended', instance.date_ended)
         instance.save()
@@ -210,6 +216,7 @@ class VehicleReceivmentSerializer(serializers.ModelSerializer):
         if not truck:
             return False
         return True
+
 
 class TruckPhotoComplainSerializer(serializers.ModelSerializer):
     class Meta:
