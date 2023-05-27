@@ -556,13 +556,14 @@ class VehicleReceivmentDetail(APIView):
 			print(description)
 			photos = request.FILES.getlist('photo')
 			queryset = VehicleReceivment.objects.get(pk=pk)
-			queryset.story = description
-			if queryset.story and queryset.complain == "A":
-				pass
+			if queryset.story == "":
+				queryset.story = description
 			truck = queryset.truck
-			truck.avaiable = 'Awar'
-			truck.save()
+			if truck:
+				truck.avaiable = 'Awar'
+				truck.save()
 			semi_trailer = queryset.semi_trailer
+			print(semi_trailer.avaiable)
 			semi_trailer.avaiable = 'Awar'
 			semi_trailer.save()
 			serializer = serializers.VehicleReceivmentSerializer(queryset)

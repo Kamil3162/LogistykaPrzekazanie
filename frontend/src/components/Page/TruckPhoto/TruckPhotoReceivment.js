@@ -47,7 +47,7 @@ function TruckPhotoSend() {
             formData.append("truck_photo", photo[i]);
         }
         try {
-            const response = await client.post("api/vehicle-receivements/complain/add", formData, {
+            const response = await client.post("api/vehicle-receivements/complain/semitruck/add", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }
@@ -87,8 +87,7 @@ function TruckPhotoSend() {
                             </li>
                         )):null}
                     </ul>
-
-                    <BtnSubmit type="submit">Zatwierdz</BtnSubmit>
+                    <BtnSubmit type="submit" onClick={handleSubmit}>Zatwierdz</BtnSubmit>
                 </BoxModify>
             </EditUserContainer>
         </EditUserBox>
