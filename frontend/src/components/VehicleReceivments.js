@@ -51,6 +51,7 @@ function VehicleReceivmentList() {
       .then(response => {
         setVehicleReceivments(response.data);
         console.log(response.data[0]);
+
       })
       .catch(error => {
         console.log(error);

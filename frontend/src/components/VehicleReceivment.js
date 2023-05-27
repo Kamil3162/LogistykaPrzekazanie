@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { useHistory } from 'react-router-dom';  // Import useHistory
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
 });
@@ -29,23 +29,31 @@ const VehicleReceivmentForm = () => {
       }).then(response =>{
           setSemiTrailers(response.data);
           console.log(response.data);
+          console.log(response.data.complain);
+          console.log("esa");
       }).catch(error => {
           console.log(error)
       });
   }, []);
 
-  const handleComplainChecker = () =>{
-      if (complain == "T"){
-          window.location.href = "/report/receivment";
+  const handleComplainChecker = (data) => {
+      const history = useHistory();
+        console.log(data.complain);
+      if (data.complain === "T") {
+        history.push("/report/receivment");
       }
-  };
+    };
   const handleSubmit = (e) => {
     e.preventDefault();
     client.post('api/vehicle-receivements', data)
         .then(response =>{
         console.log(response.data);
         console.log("wyslano data");
-        handleComplainChecker();
+        console.log(response.data.complain);
+        if (response.data[0].complain === "T"){
+           window.location.href = "/report/receivment";
+        }
+        handleComplainChecker(response.data);
     }).catch (error => {
         console.log(error.response);
         alert("Prawdopodobnie twoje zlecenie jeszcze nie zostało skonczone lub samochody albo naczepy są zajete")

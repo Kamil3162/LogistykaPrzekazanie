@@ -44,7 +44,6 @@ const VehicleReceivmentForm = () => {
 
   const handleComplainChecker = () =>{
       if (complain == "T"){
-          navigate("/report/receivment");
       }
   };
   const handleSubmit = (e) => {
@@ -54,8 +53,11 @@ const VehicleReceivmentForm = () => {
         .then(response =>{
         console.log(response.data);
         console.log("wyslano data");
+        if (response.data.complain === "T"){
+            console.log("esa");
+          return navigate("/report/receivment");
+        }
         return navigate("/");
-
     }).catch (error => {
         console.log(error.response);
         alert("Prawdopodobnie twoje zlecenie jeszcze nie zostało skonczone lub samochody albo naczepy są zajete")
