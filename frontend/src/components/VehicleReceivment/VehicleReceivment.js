@@ -80,11 +80,16 @@ const VehicleReceivmentForm = () => {
                       value={semi_trailer}
                       onChange={(e) => setSemiTrailer(e.target.value)}
                   >
-                      {semi_trailers.map((semitrailer) => (
-                          <option key={semitrailer.id} value={semitrailer.registration_number}>
-                              {semitrailer.registration_number}
-                          </option>
-                      ))}
+                      {semi_trailers.map((semitrailer) => {
+                          if (semitrailer.avaiable==='Woln') {
+                              return (
+                                  <option key={semitrailer.id} value={semitrailer.registration_number}>
+                                      {semitrailer.registration_number}
+                                  </option>
+                              );
+                          }
+                          return null; // Skip rendering if not available
+                      })}
                   </select>
               </LineForm>
 

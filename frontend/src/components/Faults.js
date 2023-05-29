@@ -25,12 +25,18 @@ const FaultsDisplay = () => {
         })
     }, []);
     return (
-    <div>
-        {receivments.map(receivment => (
-        <Link to={`/faults/${receivment.id}`}>Wezwanie nr {receivment.id}</Link>
+        <div className="page">
+            <div>
+                {receivments.map(receivment => (
+                <Link to={`/faults/${receivment.id}`} style={{textDecoration: "none", color: "#111"}}>
+                    <div style={{padding: "20px"}}>
+                        Wezwanie nr {receivment.id}
+                    </div>
+                </Link>
 
-      ))}
-    </div>
+              ))}
+            </div>
+        </div>
     );
 }
 export default FaultsDisplay;

@@ -22,7 +22,7 @@ export const TrucksContainer = styled.div`
 
 export const DataCol = styled.div`
   width: 100%;
-  background: #fffae9;
+  background: #f1f1f1;
   padding: 20px;
   box-sizing: border-box;
   margin: 10px 0;
@@ -37,6 +37,7 @@ export const BtnDelete = styled.button`
   color: #fff;
   font-size: 16px;
   margin: 0 10px;
+  cursor: pointer;
 `;
 
 export const BtnModify = styled.button`
@@ -49,4 +50,5 @@ export const BtnModify = styled.button`
   color: #fff;
   font-size: 16px;
   margin: 0 10px;
+  cursor: pointer;
 `;

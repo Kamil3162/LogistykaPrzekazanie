@@ -47,4 +47,5 @@ export const BtnSubmit = styled.button`
   font-weight: 700;
   padding: 10px 20px;
   background: linear-gradient(to right, #111 , #222);
+  cursor: pointer;
 `;

@@ -20,6 +20,8 @@ client.defaults.withCredentials = true;
 const Sidebar = (props) => {
 
     const [session, setSessionId] = useState("");
+    const [isAdmin, setisAdmin] = useState(false);
+
     client.get('api/cookie')
         .then(response => {
             setSessionId(response.data.sessionid);
@@ -28,7 +30,7 @@ const Sidebar = (props) => {
             console.log(error);
         });
 
-    const [isAdmin, setisAdmin] = useState(false);
+
     const fetchUser = () =>{
         client.get('/api/user', {
         })
@@ -96,7 +98,7 @@ const Sidebar = (props) => {
                 }
                 {session &&
                     <SideBtnWrap>
-                        <SidebarRoute to='/logut'>WYLOGUJ SIĘ</SidebarRoute>
+                        <SidebarRoute to='/logout'>WYLOGUJ SIĘ</SidebarRoute>
                     </SideBtnWrap>
                 }
 

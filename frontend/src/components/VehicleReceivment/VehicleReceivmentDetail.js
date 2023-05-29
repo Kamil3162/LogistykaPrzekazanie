@@ -60,7 +60,7 @@ const VehicleReceivmentTargetDetail = () => {
       <div style={{ height: '100vh', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{
-            key: 'AIzaSyDFJP1D7ZS4HV8MKuDjmpj6zO-ADxFk0ko',
+            key: 'AIzaSyA_-6LAkGnw4gCwAgTQ5HkBOFESEsHPNqU',
           }}
           defaultCenter={{ lat: 50.0147, lng: 22.6714 }}
           defaultZoom={8}

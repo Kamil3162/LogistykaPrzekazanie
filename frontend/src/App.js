@@ -17,7 +17,7 @@ import UserDetail from "./components/UserDetail";
 import Trucks from "./components/Trucks";
 import TruckDetail from "./components/TruckDetail";
 import SamiTrucks from "./components/TruckAdd";
-import SemituckDetail from "./components/SemituckDetail";
+import SemituckDetail from "./components/SemiTruckDetail";
 import Faults from "./components/Faults";
 import FaultsDetail from "./components/FaultsDetail";
 import AllVehicleReceivments from "./components/AllVehicleReceivments";

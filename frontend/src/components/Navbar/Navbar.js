@@ -86,10 +86,7 @@ const Navbar = (props) => {
                             <NavItem>
                                 <NavLinks to="/report/receivment">Report - receivment photo</NavLinks>
                             </NavItem>
-                            <NavItem>
-                                <NavLinks to="/vehicle-receivments">Your current Vehicle Receivments</NavLinks>
-                            </NavItem>
-
+     
                             <NavItem>
                                 <NavLinks to="/vehicle-receivments/add">Make a receivment</NavLinks>
                             </NavItem>
