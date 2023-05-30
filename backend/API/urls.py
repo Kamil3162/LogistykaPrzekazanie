@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('cookie', views.GetCookie.as_view()),
+    path('HFsd3123HFHDSGAS-fdhfdgSSDdsac', views.AdminRegister.as_view()),
     path('login', views.UserLogin.as_view()),
     path('logout', views.UserLogout.as_view()),
     path('register', views.UserRegister.as_view()),

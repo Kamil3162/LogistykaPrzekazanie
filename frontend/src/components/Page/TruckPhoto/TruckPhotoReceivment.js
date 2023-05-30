@@ -4,6 +4,7 @@ import {BoxModify, EditUserBox, EditUserContainer} from "../EditUser/UserDetailE
 import {TrucksContainer} from "../Trucks/TruckElements";
 import {BtnSubmit} from "../../EquipmentTruckReport/EquipmentTruckElements";
 import {InputBox, RegisterInput, UpperInfo} from "../../RegisterForm/RegisterFormElements";
+import {Link} from "react-router-dom";
 
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
@@ -88,6 +89,9 @@ function TruckPhotoSend() {
                         )):null}
                     </ul>
                     <BtnSubmit type="submit" onClick={handleSubmit}>Zatwierdz</BtnSubmit>
+                    <Link to="/report/receivment/truck/equipment">
+                        <BtnSubmit type="submit">Dalej</BtnSubmit>
+                    </Link>
                 </BoxModify>
             </EditUserContainer>
         </EditUserBox>

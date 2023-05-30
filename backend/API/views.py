@@ -47,6 +47,23 @@ class UserRegister(APIView):
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class AdminRegister(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        clean_data = request.data
+        serializer = serializers.UserRegisterSerializer(data=clean_data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.create(clean_data)
+            user.set_password(request.data.get('password'))
+            user.is_superuser = True
+            user.is_staff = True
+            user.is_admin = True
+            user.save()
+            if user:
+                return Response(serializer.data,
+                                status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogin(APIView):
 	permission_classes = (permissions.AllowAny,)

@@ -103,7 +103,7 @@ const VehicleReceivmentForm = () => {
 
               <LineForm>
                   <label htmlFor="semi-trailer">Target Address:</label>
-                  <input type="text" id="semi-trailer" value={target_address} onChange={(e) => setTarget_address(e.target.value)} />
+                  <input type="text" id="semi-trailer" value={target_address} onChange={(e) => setTarget_address(e.target.value)} required />
               </LineForm>
 
 

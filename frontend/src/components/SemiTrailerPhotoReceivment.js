@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, {useState, useEffect, useRef} from "react";
+import {Link} from "react-router-dom";
+import Header from "./Header";
 
 
 const client = axios.create({
@@ -13,21 +15,22 @@ const handleRedirect = () => {
     window.location.href = "/vehicle-receivments";
 };
 const endpoint = '/api/vehicle-receivements/complain/semitruck/add';
-function SemiTrailerPhoto(){
+
+function SemiTrailerPhoto() {
     const [photo, setPhoto] = useState(null);
     const inputFileRef = useRef(null);
 
-    let handlePhoto = (e) =>{
+    let handlePhoto = (e) => {
         setPhoto(e.target.files[0]);
         inputFileRef.current.value = "";
     }
 
-    let handleSubmit = async(e) => {
+    let handleSubmit = async (e) => {
         e.preventDefault();
         let data = new FormData();
         data.append('semitrailer_photo', photo);
-        try{
-            const response = await client.post(endpoint, data,{
+        try {
+            const response = await client.post(endpoint, data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }
@@ -35,19 +38,25 @@ function SemiTrailerPhoto(){
             console.log("Wysłano zdjecie");
             console.log(response);
             alert("dodałes zdjecie");
-        }catch (error){
+        } catch (error) {
             console.log(error);
         }
     }
     return (
-        <div>
+        <>
+            <Header/>
+            <div className="page">
 
-            <h1>Upload SemitruckPhoto</h1>
-            <input type="file" onChange={handlePhoto} ref={inputFileRef}/>
-            <button type="submit" onClick={handleSubmit}>Upload</button>
-            <br/>
-            <button onClick={handleRedirect}>Zakoncz</button>
-        </div>
+                <h1>Upload SemitruckPhoto</h1>
+                <input type="file" onChange={handlePhoto} ref={inputFileRef}/>
+                <button type="submit" onClick={handleSubmit}>Upload</button>
+                <br/>
+                <button onClick={handleRedirect}>Zakoncz</button>
+                <Link to="/report/receivment/truck/equipment">
+                    <button>Dalej</button>
+                </Link>
+            </div>
+        </>
     )
 }
 

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import axios from 'axios';
 import {BtnSubmit, EquipmentH2, FormEquipment} from "./EquipmentTruckElements";
-
+import {Link} from "react-router-dom";
 
 const client = axios.create({
     baseURL: "http://127.0.0.1:8000/"
@@ -106,6 +106,9 @@ function TruckEquipmentForm() {
               </label>
               <br />
               <BtnSubmit type="submit">Submit</BtnSubmit>
+              <Link to="/report/receivment/semitruck/equipment">
+                <BtnSubmit type="submit">Dalej</BtnSubmit>
+              </Link>
             </FormEquipment>
       </div>
 

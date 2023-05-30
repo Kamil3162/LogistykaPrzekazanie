@@ -8,6 +8,7 @@ import SemiTrailerPhotoReceivment from "./components/SemiTrailerPhotoReceivment"
 import EquipmentSemitruckReport from "./components/EquipmentSemitruckReport";
 import Home from "./components/Layout/Home";
 import Register from "./components/Layout/Register";
+import RegisterAdmin from "./components/Layout/RegisterAdmin";
 import Login from "./components/Layout/Login";
 import User from "./components/Layout/User";
 import VehicleAdd from "./components/Layout/VehicleAdd";
@@ -28,7 +29,7 @@ import SamiTrucksLayout from "./components/Layout/SamiTrucksLayout";
 import EditSamiTruckLayout from "./components/Layout/EditSamiTruckLayout";
 import FaultsLayout from "./components/Layout/FaultsLayout";
 import FaultsImageLayout from "./components/Layout/FaultsImageLayout";
-
+import VehicleReceivments from "./components/VehicleReceivments";
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
@@ -52,8 +53,10 @@ root.render(
                 <Route path="/user/:pk" element={<EditUser />} />
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/vehicle-receivment/:pk" element={<VehicleReceivmentDetailModify/>}/>
+                <Route path="/vehicle-receivments" element={<VehicleReceivments/>}/>
                 <Route path="/vehicle-receivments/:pk" element={<VehicleReceivmentDetail/>}/>
                 <Route path="/vehicle-receivments/add" element={<VehicleAdd/>}/>
+                <Route path="/admin-register/675473fdsghhfds632156f" element={<RegisterAdmin/>}/>
                 <Route path="/report/receivment" element={<TruckPhoto/>}/>
                 <Route path="/report/receivment/semitrailer" element={<SemiTrailerPhotoReceivment/>}/>
                 <Route path="/report/receivment/truck/equipment" element={<TruckEquipment/>}/>
